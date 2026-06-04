@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { Cairo } from 'next/font/google';
 import ThemeRegistry from '../lib/ThemeRegistry';
-import Navbar from '../components/shared/Navbar';
-import Footer from '../components/shared/Footer';
+import LayoutWrapper from '../components/shared/LayoutWrapper';
 import './globals.css';
 
 const cairo = Cairo({ subsets: ['arabic'] });
@@ -21,13 +20,9 @@ export default function RootLayout({
     <html lang="ar" dir="rtl">
       <body className={cairo.className} style={{ margin: 0, padding: 0 }}>
         <ThemeRegistry>
-          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Navbar />
-            <main style={{ flexGrow: 1 }}>
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
         </ThemeRegistry>
       </body>
     </html>

@@ -11,7 +11,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
 import Link from 'next/link';
+import { useAuth } from '../../hooks/useAuth';
 
 const pages = [
   { name: 'الرئيسية', path: '/' },
@@ -21,14 +24,27 @@ const pages = [
 ];
 
 export default function Navbar() {
+  const { user, isAuthenticated, logout } = useAuth();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleLogout = async () => {
+    handleCloseUserMenu();
+    await logout();
   };
 
   return (
@@ -69,7 +85,7 @@ export default function Navbar() {
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'right', // RTL uses right to left
+                horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
@@ -125,11 +141,57 @@ export default function Navbar() {
             ))}
           </Box>
 
-          {/* Login Button */}
+          {/* Auth section */}
           <Box sx={{ flexGrow: 0 }}>
-            <Button variant="contained" color="primary" sx={{ borderRadius: 2 }}>
-              تسجيل الدخول
-            </Button>
+            {isAuthenticated && user ? (
+              <>
+                <Tooltip title="خيارات الحساب">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar sx={{ bgcolor: 'primary.main' }}>
+                      {user.name ? user.name[0].toUpperCase() : 'U'}
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem disabled>
+                    <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
+                      {user.name}
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu} component={Link} href="/dashboard/user">
+                    <Typography align="right">لوحة التحكم</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <Typography align="right" color="error">تسجيل الخروج</Typography>
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                href="/auth/login"
+                sx={{ borderRadius: 2 }}
+              >
+                تسجيل الدخول
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </Container>
