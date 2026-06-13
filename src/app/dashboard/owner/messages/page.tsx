@@ -1,4 +1,4 @@
-function MessagesPage() {
+function Messages() {
     return (
         <div>
             <h1>Messages</h1>
@@ -6,4 +6,4 @@ function MessagesPage() {
     );
 }
 
-export default MessagesPage;
+export default Messages;

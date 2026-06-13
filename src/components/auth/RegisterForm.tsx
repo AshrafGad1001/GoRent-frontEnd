@@ -1,251 +1,162 @@
 'use client';
 
-import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import CircularProgress from '@mui/material/CircularProgress';
-import Alert from '@mui/material/Alert';
-import Fade from '@mui/material/Fade';
-import Divider from '@mui/material/Divider';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import React from 'react';
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Paper,
+  CircularProgress,
+  Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText
+} from '@mui/material';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { registerAction } from '../../actions/auth';
+import { useAuth } from '../../hooks/useAuth';
+import { useSearchParams } from 'next/navigation';
+import { useForm, Controller } from 'react-hook-form';
+import { RegisterCredentials } from '../../types/user';
 
 export default function RegisterForm() {
-  const router = useRouter();
+  const { register: registerUser, isLoading, error } = useAuth();
+  const searchParams = useSearchParams();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'tenant',
+  const { register, handleSubmit, control, formState: { errors } } = useForm<RegisterCredentials>({
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      phone: '',
+      role: 'tenant'
+    }
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (error) setError('');
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess('');
-
-    const result = await registerAction(formData);
-
-    if (result.success) {
-      setSuccess(result.message);
-      setTimeout(() => {
-        router.push('/auth/login');
-      }, 1500);
-    } else {
-      setError(result.message);
-      setLoading(false);
+  const onSubmit = async (data: RegisterCredentials) => {
+    try {
+      await registerUser(data);
+    } catch (err) {
+      // Error handled by hook
     }
   };
 
   return (
-    <Box>
-      {/* Alerts */}
+    <Paper elevation={3} sx={{ p: 4, width: '100%', maxWidth: 450, mx: 'auto', mt: 8, mb: 8, borderRadius: 2 }}>
+      <Typography variant="h4" component="h1" align="center" gutterBottom sx={{ fontWeight: "bold" }} color="primary">
+        إنشاء حساب جديد
+      </Typography>
+
       {error && (
-        <Fade in>
-          <Alert
-            severity="error"
-            sx={{ mb: 3, borderRadius: 2 }}
-            onClose={() => setError('')}
-          >
-            {error}
-          </Alert>
-        </Fade>
-      )}
-      {success && (
-        <Fade in>
-          <Alert severity="success" sx={{ mb: 3, borderRadius: 2 }}>
-            {success}
-          </Alert>
-        </Fade>
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
       )}
 
-      {/* Form */}
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}
-      >
+      <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2 }} noValidate>
         <TextField
-          label="الاسم الكامل"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
+          margin="normal"
           required
           fullWidth
+          id="name"
+          label="الاسم الكامل"
           autoComplete="name"
           autoFocus
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonOutlinedIcon color="action" />
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': { borderRadius: 2 },
-          }}
+          disabled={isLoading}
+          {...register('name', { 
+            required: 'الاسم مطلوب', 
+            minLength: { value: 3, message: 'يجب أن يكون الاسم 3 أحرف على الأقل' } 
+          })}
+          error={!!errors.name}
+          helperText={errors.name?.message}
         />
-
         <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
           label="البريد الإلكتروني"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          fullWidth
           autoComplete="email"
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailOutlinedIcon color="action" />
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': { borderRadius: 2 },
-          }}
+          disabled={isLoading}
+          {...register('email', { 
+            required: 'البريد الإلكتروني مطلوب', 
+            pattern: { 
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 
+              message: 'بريد إلكتروني غير صالح' 
+            } 
+          })}
+          error={!!errors.email}
+          helperText={errors.email?.message}
         />
-
         <TextField
-          label="كلمة المرور"
-          name="password"
-          type={showPassword ? 'text' : 'password'}
-          value={formData.password}
-          onChange={handleChange}
+          margin="normal"
           required
           fullWidth
+          label="كلمة المرور"
+          type="password"
+          id="password"
           autoComplete="new-password"
-          helperText="يجب أن تحتوي على 8 أحرف على الأقل مع حرف كبير ورقم ورمز"
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockOutlinedIcon color="action" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                    size="small"
-                    aria-label={
-                      showPassword ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'
-                    }
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': { borderRadius: 2 },
-          }}
+          disabled={isLoading}
+          {...register('password', { 
+            required: 'كلمة المرور مطلوبة', 
+            minLength: { value: 6, message: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' } 
+          })}
+          error={!!errors.password}
+          helperText={errors.password?.message}
+        />
+        <TextField
+          margin="normal"
+          fullWidth
+          id="phone"
+          label="رقم الهاتف"
+          autoComplete="tel"
+          disabled={isLoading}
+          {...register('phone')}
+          error={!!errors.phone}
+          helperText={errors.phone?.message}
         />
 
-        <TextField
-          select
-          label="نوع الحساب"
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-          fullWidth
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <BadgeOutlinedIcon color="action" />
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': { borderRadius: 2 },
-          }}
-        >
-          <MenuItem value="tenant">مستأجر (Tenant)</MenuItem>
-          <MenuItem value="owner">مالك عقار (Owner)</MenuItem>
-        </TextField>
+        <FormControl fullWidth margin="normal" error={!!errors.role}>
+          <InputLabel id="role-select-label">نوع الحساب</InputLabel>
+          <Controller
+            name="role"
+            control={control}
+            rules={{ required: 'يرجى اختيار نوع الحساب' }}
+            render={({ field }) => (
+              <Select
+                {...field}
+                labelId="role-select-label"
+                id="role-select"
+                label="نوع الحساب"
+                disabled={isLoading}
+              >
+                <MenuItem value="tenant">مستخدم (مستأجر)</MenuItem>
+                <MenuItem value="owner">مالك عقار</MenuItem>
+              </Select>
+            )}
+          />
+          {errors.role && <FormHelperText>{errors.role.message}</FormHelperText>}
+        </FormControl>
 
         <Button
           type="submit"
+          fullWidth
           variant="contained"
           size="large"
-          disabled={loading}
-          sx={{
-            mt: 1,
-            py: 1.5,
-            fontSize: '1.05rem',
-            fontWeight: 700,
-            borderRadius: 2,
-            textTransform: 'none',
-            background: 'linear-gradient(135deg, #2e7d32, #1b5e20)',
-            boxShadow: '0 4px 14px rgba(46,125,50,0.35)',
-            '&:hover': {
-              background: 'linear-gradient(135deg, #1b5e20, #0a3d0a)',
-              boxShadow: '0 6px 20px rgba(46,125,50,0.45)',
-            },
-            '&:disabled': {
-              background: 'grey.300',
-            },
-          }}
+          sx={{ mt: 3, mb: 2, borderRadius: 2 }}
+          disabled={isLoading}
         >
-          {loading ? (
-            <CircularProgress size={24} sx={{ color: '#fff' }} />
-          ) : (
-            'إنشاء حساب'
-          )}
+          {isLoading ? <CircularProgress size={24} /> : 'تسجيل'}
         </Button>
 
-        <Divider sx={{ my: 1 }}>
-          <Typography variant="body2" color="text.secondary">
-            أو
-          </Typography>
-        </Divider>
-
-        <Typography align="center" variant="body2" color="text.secondary">
-          لديك حساب بالفعل؟{' '}
-          <Link
-            href="/auth/login"
-            style={{
-              color: '#1976d2',
-              textDecoration: 'none',
-              fontWeight: 700,
-            }}
-          >
-            تسجيل الدخول
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Link href="/auth/login" style={{ textDecoration: 'none', color: '#1976d2' }}>
+            <Typography variant="body2">لديك حساب بالفعل؟ سجل دخولك</Typography>
           </Link>
-        </Typography>
+        </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 }

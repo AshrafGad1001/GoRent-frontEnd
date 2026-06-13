@@ -1,26 +1,67 @@
-import type { SafeUser } from '../types/user';
+import {
+  User,
+  LoginCredentials,
+  RegisterCredentials,
+  AuthResponse,
+} from "../types/user";
 
-/**
- * Read the user info cookie (client-side).
- * The token cookie is HttpOnly and NOT accessible here — that's by design.
- */
-export function getUser(): SafeUser | null {
-  if (typeof window === 'undefined') return null;
+const API_URL = "";
 
-  const match = document.cookie.match(/(?:^|;\s*)user=([^;]*)/);
-  if (!match) return null;
+// Helper function for API calls
+async function fetchApi<T>(
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const defaultOptions: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // This is crucial for sending and receiving HTTP-only cookies
+    credentials: "include",
+  };
 
-  try {
-    return JSON.parse(decodeURIComponent(match[1])) as SafeUser;
-  } catch {
-    return null;
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...defaultOptions,
+    ...options,
+    headers: {
+      ...defaultOptions.headers,
+      ...options.headers,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "An error occurred during the request");
   }
+
+  return data as T;
 }
 
-/**
- * Check if the user is authenticated (client-side).
- * Checks for the user cookie since the token cookie is HttpOnly.
- */
-export function isAuthenticated(): boolean {
-  return getUser() !== null;
-}
+export const authService = {
+  login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
+    return fetchApi<AuthResponse>("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    });
+  },
+
+  register: async (credentials: RegisterCredentials): Promise<AuthResponse> => {
+    return fetchApi<AuthResponse>("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    });
+  },
+
+  logout: async (): Promise<{ message: string }> => {
+    return fetchApi<{ message: string }>("/api/auth/logout", {
+      method: "POST",
+    });
+  },
+
+  getCurrentUser: async (): Promise<{ user: User }> => {
+    return fetchApi<{ user: User }>("/api/auth/me", {
+      method: "GET",
+    });
+  },
+};

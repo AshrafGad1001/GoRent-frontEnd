@@ -26,25 +26,13 @@ const pages = [
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const handleLogout = async () => {
-    handleCloseUserMenu();
-    await logout();
   };
 
   return (
@@ -145,41 +133,17 @@ export default function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             {isAuthenticated && user ? (
               <>
-                <Tooltip title="خيارات الحساب">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Tooltip title={user?.role === 'owner' ? 'لوحة تحكم المالك' : 'الملف الشخصي'}>
+                  <IconButton 
+                    component={Link} 
+                    href={user?.role === 'owner' ? '/dashboard/owner' : '/Profile'} 
+                    sx={{ p: 0 }}
+                  >
                     <Avatar sx={{ bgcolor: 'primary.main' }}>
                       {user.name ? user.name[0].toUpperCase() : 'U'}
                     </Avatar>
                   </IconButton>
                 </Tooltip>
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  <MenuItem disabled>
-                    <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
-                      {user.name}
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu} component={Link} href="/dashboard/user">
-                    <Typography align="right">لوحة التحكم</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout}>
-                    <Typography align="right" color="error">تسجيل الخروج</Typography>
-                  </MenuItem>
-                </Menu>
               </>
             ) : (
               <Button
