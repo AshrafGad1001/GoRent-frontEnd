@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import Link from 'next/link';
-import { useAuth } from '../../hooks/useAuth';
+import React, { useState } from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
+import Link from "next/link";
+import { useAuth } from "../../hooks/useAuth";
 
 const pages = [
-  { name: 'الرئيسية', path: '/' },
-  { name: 'العقارات', path: '/properties' },
-  { name: 'عن الشركة', path: '/about' },
-  { name: 'تواصل معنا', path: '/contact' },
+  { name: "الرئيسية", path: "/" },
+  { name: "العقارات", path: "/properties" },
+  { name: "عن الشركة", path: "/about" },
+  { name: "تواصل معنا", path: "/contact" },
 ];
 
 export default function Navbar() {
@@ -47,17 +47,17 @@ export default function Navbar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: "none", md: "flex" },
               fontWeight: 700,
-              color: 'primary.main',
-              textDecoration: 'none',
+              color: "primary.main",
+              textDecoration: "none",
             }}
           >
             GoRent
           </Typography>
 
           {/* Mobile Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="navigation menu"
@@ -72,23 +72,31 @@ export default function Navbar() {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
+                vertical: "bottom",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu} component={Link} href={page.path}>
-                  <Typography align="center" sx={{ color: 'text.primary', textDecoration: 'none' }}>
+                <MenuItem
+                  key={page.name}
+                  onClick={handleCloseNavMenu}
+                  component={Link}
+                  href={page.path}
+                >
+                  <Typography
+                    align="center"
+                    sx={{ color: "text.primary", textDecoration: "none" }}
+                  >
                     {page.name}
                   </Typography>
                 </MenuItem>
@@ -104,25 +112,30 @@ export default function Navbar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontWeight: 700,
-              color: 'primary.main',
-              textDecoration: 'none',
+              color: "primary.main",
+              textDecoration: "none",
             }}
           >
             GoRent
           </Typography>
 
           {/* Desktop Links */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, ml: 4 }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, ml: 4 }}>
             {pages.map((page) => (
               <Button
                 key={page.name}
                 component={Link}
                 href={page.path}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'text.primary', display: 'block', fontWeight: 600 }}
+                sx={{
+                  my: 2,
+                  color: "text.primary",
+                  display: "block",
+                  fontWeight: 600,
+                }}
               >
                 {page.name}
               </Button>
@@ -133,14 +146,28 @@ export default function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             {isAuthenticated && user ? (
               <>
-                <Tooltip title={user?.role === 'owner' ? 'لوحة تحكم المالك' : 'الملف الشخصي'}>
-                  <IconButton 
-                    component={Link} 
-                    href={user?.role === 'owner' ? '/dashboard/owner' : '/Profile'} 
+                <Tooltip
+                  title={
+                    user?.role === "owner" ? "لوحة تحكم المالك" : "الملف الشخصي"
+                  }
+                >
+                  <IconButton
+                    component={Link}
+                    href={
+                      user?.role === "tenant"
+                        ? "/"
+                        : user.role === "owner"
+                          ? "/dashboard/owner"
+                          : user.role === "admin"
+                            ? "/dashboard/admin"
+                            : user.role === "superadmin"
+                              ? "/dashboard/superadmin"
+                              : ""
+                    }
                     sx={{ p: 0 }}
                   >
-                    <Avatar sx={{ bgcolor: 'primary.main' }}>
-                      {user.name ? user.name[0].toUpperCase() : 'U'}
+                    <Avatar sx={{ bgcolor: "primary.main" }}>
+                      {user.name ? user.name[0].toUpperCase() : "U"}
                     </Avatar>
                   </IconButton>
                 </Tooltip>
