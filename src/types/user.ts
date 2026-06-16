@@ -28,3 +28,10 @@ export interface RegisterCredentials {
   phone?: string;
   role?: "tenant" | "owner";
 }
+
+export interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
