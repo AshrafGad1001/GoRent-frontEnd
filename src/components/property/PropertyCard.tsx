@@ -9,6 +9,8 @@ import {
   Chip,
   Rating,
 } from '@mui/material';
+import Link from 'next/link';
+import Image from 'next/image';
 import BedIcon from '@mui/icons-material/KingBedOutlined';
 import BathtubIcon from '@mui/icons-material/BathtubOutlined';
 import SquareFootIcon from '@mui/icons-material/SquareFootOutlined';
@@ -28,8 +30,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   const bathrooms = property.specifications.apartment?.bathrooms;
 
   return (
-    <Card
-      sx={{
+    <Link href={`/properties/${property._id}`} style={{ textDecoration: 'none' }}>
+      <Card
+        sx={{
         maxWidth: 345,
         borderRadius: 2,
         boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
@@ -42,17 +45,19 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       }}
     >
       <Box sx={{ position: 'relative' }}>
-        <CardMedia
-          component="img"
-          height="220"
-          image={imageUrl}
-          alt={property.title}
-          sx={{ filter: 'brightness(0.95)' }}
-        />
+        <Box sx={{ position: 'relative', height: 220, width: '100%' }}>
+          <Image
+            src={imageUrl}
+            alt={property.title}
+            fill
+            className="object-cover"
+            style={{ filter: 'brightness(0.95)' }}
+          />
+        </Box>
 
         {/* Featured Chip */}
         <Chip
-          label="FEATURED"
+          label="مميز"
           size="small"
           sx={{
             position: 'absolute',
@@ -81,10 +86,10 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           }}
         >
           <Typography variant="h5" component="span" sx={{ fontWeight: 'bold' }}>
-            ${property.pricePerMonth}
+            {property.pricePerMonth}
           </Typography>
-          <Typography variant="body2" component="span" sx={{ ml: 0.5 }}>
-            /month
+          <Typography variant="body2" component="span" sx={{ ml: 0.5, mr: 0.5 }}>
+            ج.م/شهر
           </Typography>
         </Box>
 
@@ -121,42 +126,43 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               {bedrooms && (
                 <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', gap: 0.5 }}>
                   <BedIcon fontSize="small" sx={{ opacity: 0.7 }} />
-                  <Typography variant="body2">{bedrooms} Bedrooms</Typography>
+                  <Typography variant="body2">{bedrooms} غرف</Typography>
                 </Box>
               )}
               {bathrooms && (
                 <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', gap: 0.5 }}>
                   <BathtubIcon fontSize="small" sx={{ opacity: 0.7 }} />
-                  <Typography variant="body2">{bathrooms} Baths</Typography>
+                  <Typography variant="body2">{bathrooms} حمام</Typography>
                 </Box>
               )}
             </>
           ) : (
             <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', gap: 0.5 }}>
               <StorefrontIcon fontSize="small" sx={{ opacity: 0.7 }} />
-              <Typography variant="body2">Commercial Space</Typography>
+              <Typography variant="body2">مساحة تجارية</Typography>
             </Box>
           )}
 
           <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', gap: 0.5 }}>
             <SquareFootIcon fontSize="small" sx={{ opacity: 0.7 }} />
-            <Typography variant="body2">{property.squareFootage} sqft</Typography>
+            <Typography variant="body2">{property.squareFootage} م²</Typography>
           </Box>
         </Box>
 
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textTransform: 'capitalize' }}>
-          {property.type.toLowerCase()}
+          {property.type === 'RESIDENTIAL' ? 'سكني' : property.type === 'COMMERCIAL' ? 'تجاري' : property.type}
         </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, pt: 2, borderTop: '1px solid #f0f0f0' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Rating value={5} readOnly size="small" sx={{ color: '#fbc02d' }} />
             <Typography variant="body2" color="text.secondary">
-              Excellent
+              ممتاز
             </Typography>
           </Box>
         </Box>
       </CardContent>
     </Card>
+    </Link>
   );
 }

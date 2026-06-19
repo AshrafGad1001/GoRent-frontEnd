@@ -20,4 +20,7 @@ export const propertyService = {
     }
     return fetchApi<PropertyResponse>(url);
   },
+  fetchPropertyById: async (id: string): Promise<{ property: Property }> => {
+    return fetchApi<{ property: Property }>(`/api/properties/${id}`);
+  },
 };

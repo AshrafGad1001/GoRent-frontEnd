@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-le
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Property } from '@/types/property';
+import Image from 'next/image';
 
 // Fix Leaflet's default icon path issues with Next.js
 const icon = L.icon({
@@ -80,7 +81,7 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
           onMapClick(lat, lng, radiusInput);
         }
       } else {
-        alert("Location not found");
+        alert("تعذر العثور على الموقع");
       }
     } catch (err) {
       console.error("Geocoding failed", err);
@@ -106,18 +107,18 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
         <form onSubmit={handleSearchLocation} className="flex gap-2">
           <input
             type="text"
-            placeholder="Search location (e.g. Cairo)"
+            placeholder="ابحث عن موقع (مثل: القاهرة)"
             className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 w-full md:w-64"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button type="submit" className="bg-zinc-800 text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-zinc-900">
-            Find
+            بحث
           </button>
         </form>
 
-        <div className="flex items-center gap-2 border-t md:border-t-0 md:border-l border-gray-200 pt-2 md:pt-0 md:pl-4 w-full md:w-auto">
-          <span className="text-xs text-gray-500 font-medium">Radius:</span>
+        <div className="flex items-center gap-2 border-t md:border-t-0 md:border-r border-gray-200 pt-2 md:pt-0 md:pr-4 w-full md:w-auto">
+          <span className="text-xs text-gray-500 font-medium">النطاق:</span>
           <input
             type="range"
             min="1000"
@@ -129,7 +130,7 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
             onTouchEnd={applyRadius}
             className="w-24 md:w-32"
           />
-          <span className="text-xs font-semibold">{radiusInput / 1000}km</span>
+          <span className="text-xs font-semibold">{radiusInput / 1000} كم</span>
         </div>
       </div>
 
@@ -165,15 +166,18 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
               <Popup className="rounded-xl overflow-hidden">
                 <div className="w-48">
                   {property.images && property.images.length > 0 && (
-                    <img
-                      src={property.images[0]}
-                      alt={property.title}
-                      className="w-full h-24 object-cover mb-2 rounded-md"
-                    />
+                    <div className="w-full h-24 relative mb-2 rounded-md overflow-hidden">
+                      <Image
+                        src={property.images[0]}
+                        alt={property.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                   )}
                   <h3 className="font-semibold text-gray-900 line-clamp-1">{property.title}</h3>
-                  <p className="text-sm font-bold text-blue-600">${property.pricePerMonth} / month</p>
-                  <p className="text-xs text-gray-500 capitalize">{property.type.toLowerCase()}</p>
+                  <p className="text-sm font-bold text-blue-600">{property.pricePerMonth} ج.م / شهر</p>
+                  <p className="text-xs text-gray-500 capitalize">{property.type === 'RESIDENTIAL' ? 'سكني' : property.type === 'COMMERCIAL' ? 'تجاري' : property.type}</p>
                 </div>
               </Popup>
             </Marker>

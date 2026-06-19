@@ -20,7 +20,7 @@ export default function HeroSection({ filters, onFilterChange, onSearch }: HeroS
 
       <div className="relative z-10 flex flex-col items-center w-full max-w-6xl px-4 text-center mt-12 gap-10">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-md">
-          Browse Homes, Apartments <br className="hidden md:block" /> & Rentals with Ease
+          تصفح المنازل، الشقق <br className="hidden md:block" /> والعقارات بكل سهولة
         </h1>
 
         <FilterBar 

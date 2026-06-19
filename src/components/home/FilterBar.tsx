@@ -24,17 +24,17 @@ export default function FilterBar({ filters, onFilterChange, onSearch }: FilterB
         <div className="flex items-center px-2 md:px-4 py-2 w-full">
           <HomeIcon className="text-gray-400 mr-2" />
           <div className="flex flex-col items-start w-full">
-            <span className="text-xs font-semibold text-gray-500">Property Type</span>
+            <span className="text-xs font-semibold text-gray-500">نوع العقار</span>
             <select
               className="w-full text-sm font-medium text-gray-800 bg-transparent focus:outline-none appearance-none cursor-pointer"
               value={filters.type || ''}
               onChange={(e) => onFilterChange('type', e.target.value)}
             >
-              <option value="">Any Type</option>
-              <option value="APARTMENT">Apartment</option>
-              <option value="VILLA">Villa</option>
-              <option value="HOUSE">House</option>
-              <option value="COMMERCIAL">Commercial</option>
+              <option value="">أي نوع</option>
+              <option value="APARTMENT">شقة</option>
+              <option value="VILLA">فيلا</option>
+              <option value="HOUSE">منزل</option>
+              <option value="COMMERCIAL">تجاري</option>
             </select>
           </div>
         </div>
@@ -42,11 +42,11 @@ export default function FilterBar({ filters, onFilterChange, onSearch }: FilterB
         <div className="flex items-center px-2 md:px-4 py-2 w-full">
           <AttachMoneyIcon className="text-gray-400 mr-2" />
           <div className="flex flex-col items-start w-full">
-            <span className="text-xs font-semibold text-gray-500">Price Range</span>
+            <span className="text-xs font-semibold text-gray-500">نطاق السعر</span>
             <div className="flex items-center gap-2 w-full">
               <input
                 type="number"
-                placeholder="Min"
+                placeholder="الأدنى"
                 className="w-1/2 text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
                 value={filters.minPrice || ''}
                 onChange={(e) => onFilterChange('minPrice', e.target.value ? Number(e.target.value) : undefined)}
@@ -54,7 +54,7 @@ export default function FilterBar({ filters, onFilterChange, onSearch }: FilterB
               <span className="text-gray-400">-</span>
               <input
                 type="number"
-                placeholder="Max"
+                placeholder="الأقصى"
                 className="w-1/2 text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
                 value={filters.maxPrice || ''}
                 onChange={(e) => onFilterChange('maxPrice', e.target.value ? Number(e.target.value) : undefined)}
@@ -66,11 +66,11 @@ export default function FilterBar({ filters, onFilterChange, onSearch }: FilterB
         <div className="flex items-center px-2 md:px-4 py-2 w-full">
           <SquareFootIcon className="text-gray-400 mr-2" />
           <div className="flex flex-col items-start w-full">
-            <span className="text-xs font-semibold text-gray-500">Size (sqm)</span>
+            <span className="text-xs font-semibold text-gray-500">المساحة (متر مربع)</span>
             <div className="flex items-center gap-2 w-full">
               <input
                 type="number"
-                placeholder="Min"
+                placeholder="الأدنى"
                 className="w-1/2 text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
                 value={filters.minSize || ''}
                 onChange={(e) => onFilterChange('minSize', e.target.value ? Number(e.target.value) : undefined)}
@@ -78,7 +78,7 @@ export default function FilterBar({ filters, onFilterChange, onSearch }: FilterB
               <span className="text-gray-400">-</span>
               <input
                 type="number"
-                placeholder="Max"
+                placeholder="الأقصى"
                 className="w-1/2 text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
                 value={filters.maxSize || ''}
                 onChange={(e) => onFilterChange('maxSize', e.target.value ? Number(e.target.value) : undefined)}
@@ -90,12 +90,12 @@ export default function FilterBar({ filters, onFilterChange, onSearch }: FilterB
         <div className="flex items-center px-2 md:px-4 py-2 w-full">
           <BedIcon className="text-gray-400 mr-2" />
           <div className="flex flex-col items-start w-full">
-            <span className="text-xs font-semibold text-gray-500">Rooms</span>
+            <span className="text-xs font-semibold text-gray-500">الغرف</span>
             <div className="flex items-center gap-2 w-full">
-              <div className="flex items-center w-1/2" title="Bedrooms">
+              <div className="flex items-center w-1/2" title="غرف النوم">
                  <input
                   type="number"
-                  placeholder="Beds"
+                  placeholder="نوم"
                   min="0"
                   className="w-full text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
                   value={filters.bedrooms || ''}
@@ -103,11 +103,11 @@ export default function FilterBar({ filters, onFilterChange, onSearch }: FilterB
                 />
               </div>
               <span className="text-gray-400">|</span>
-              <div className="flex items-center w-1/2" title="Bathrooms">
-                 <BathtubIcon className="text-gray-400 text-sm mr-1 hidden lg:block" />
+              <div className="flex items-center w-1/2" title="الحمامات">
+                 <BathtubIcon className="text-gray-400 text-sm ml-1 hidden lg:block" />
                  <input
                   type="number"
-                  placeholder="Baths"
+                  placeholder="حمامات"
                   min="0"
                   className="w-full text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
                   value={filters.bathrooms || ''}
@@ -127,7 +127,7 @@ export default function FilterBar({ filters, onFilterChange, onSearch }: FilterB
           className="w-full sm:w-auto bg-zinc-800 hover:bg-zinc-900 text-white font-medium py-2.5 px-8 rounded-full transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
         >
           <SearchIcon fontSize="small" />
-          Search Properties
+          البحث عن عقارات
         </button>
       </div>
     </div>
