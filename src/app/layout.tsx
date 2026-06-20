@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={cairo.className} style={{ margin: 0, padding: 0 }}>
+      <body className={cairo.className} style={{ margin: 0, padding: 0 }} >
         <ThemeRegistry>
           <StoreProvider>
             <LayoutWrapper>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardMedia,
@@ -16,8 +16,56 @@ import BathtubIcon from '@mui/icons-material/BathtubOutlined';
 import SquareFootIcon from '@mui/icons-material/SquareFootOutlined';
 import StorefrontIcon from '@mui/icons-material/StorefrontOutlined';
 import { PropertyCardProps } from '../../types/property';
+import { reviewService } from '@/services/review';
 
+function PropertyRating({ propertyId, ownerId }: { propertyId: string, ownerId: string }) {
+  const [rating, setRating] = useState<number | null>(null);
+  const [reviewCount, setReviewCount] = useState<number>(0);
 
+  useEffect(() => {
+    // Fetch reviews by propertyId (targetType: PROPERTY)
+    reviewService.fetchReviews({ propertyId, targetType: 'PROPERTY' })
+      .then(data => {
+        if (data.reviews && data.reviews.length > 0) {
+          const sum = data.reviews.reduce((acc, rev) => acc + rev.rating, 0);
+          setRating(sum / data.reviews.length);
+          setReviewCount(data.reviews.length);
+        } else {
+          setRating(0);
+          setReviewCount(0);
+        }
+      })
+      .catch(err => {
+        console.error("Failed to fetch reviews for card", err);
+      });
+  }, [propertyId, ownerId]);
+
+  if (rating === null) {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        <Typography variant="body2" color="text.secondary">جاري التحميل...</Typography>
+      </Box>
+    );
+  }
+
+  if (rating === 0) {
+    return (
+      <Typography variant="body2" color="text.secondary">لا توجد تقييمات</Typography>
+    );
+  }
+
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, direction: 'ltr' }}>
+      <Rating value={Math.round(rating)} precision={1} readOnly size="small" sx={{ color: '#fbc02d' }} />
+      <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
+        {rating.toFixed(1)}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
+        ({reviewCount})
+      </Typography>
+    </Box>
+  );
+}
 
 export default function PropertyCard({ property }: PropertyCardProps) {
   // Use a placeholder if images array is empty
@@ -154,12 +202,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, pt: 2, borderTop: '1px solid #f0f0f0' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Rating value={5} readOnly size="small" sx={{ color: '#fbc02d' }} />
-            <Typography variant="body2" color="text.secondary">
-              ممتاز
-            </Typography>
-          </Box>
+          <PropertyRating propertyId={property._id} ownerId={property.ownerId._id} />
         </Box>
       </CardContent>
     </Card>
