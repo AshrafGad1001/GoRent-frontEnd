@@ -1,12 +1,14 @@
-
 "use client";
 
 import { useState, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { User } from "../types/user";
 import { userService } from "../services/user";
+import { setUser } from "../store/slices/authSlice";
 import { ImageState, InfoState, PassState, InfoForm, PassForm, PassVisibility } from "../types/settings";
 
 export function useSettings(user: User, onUpdate?: () => void) {
+    const dispatch = useDispatch();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [imageState, setImageState] = useState<ImageState>({
@@ -39,8 +41,9 @@ export function useSettings(user: User, onUpdate?: () => void) {
         if (!file) return;
         try {
             setImageState({ loading: true, error: null, success: false });
-            await userService.updateProfileImage(user._id, file);
+            const data = await userService.updateProfileImage(user._id, file);
             setImageState({ loading: false, error: null, success: true });
+            if (data.user) dispatch(setUser(data.user));
             onUpdate?.();
         } catch (err: unknown) {
             setImageState({ loading: false, success: false, error: err instanceof Error ? err.message : "فشل تحديث الصورة" });
@@ -50,8 +53,9 @@ export function useSettings(user: User, onUpdate?: () => void) {
     const handleUpdateInfo = async () => {
         try {
             setInfoState(prev => ({ ...prev, loading: true, error: null, success: false }));
-            await userService.updateUser(user._id, infoForm);
+            const data = await userService.updateUser(user._id, infoForm);
             setInfoState(prev => ({ ...prev, loading: false, success: true }));
+            if (data.user) dispatch(setUser(data.user));
             onUpdate?.();
             setTimeout(() => setInfoState(prev => ({ ...prev, open: false })), 1000);
         } catch (err: unknown) {

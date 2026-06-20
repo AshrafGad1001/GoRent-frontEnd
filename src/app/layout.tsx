@@ -9,7 +9,10 @@ const cairo = Cairo({ subsets: ['arabic'] });
 
 export const metadata: Metadata = {
   title: 'GoRent',
-  description: 'GoRent Arabic Store',
+  description: 'The specialized platform for real estate rental in Egypt',
+  icons: {
+    icon: '/favicon.ico'
+  },
 };
 
 export default function RootLayout({
