@@ -41,7 +41,7 @@ export default function PropertyContact({ property }: PropertyContactProps) {
             onClick={() => setIsModalOpen(true)}
             className="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold py-3 px-4 rounded-xl transition-colors border border-blue-100"
           >
-            طلب معاينة
+            احجز الآن
           </button>
         </div>
 
