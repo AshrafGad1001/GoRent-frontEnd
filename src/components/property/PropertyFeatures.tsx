@@ -14,7 +14,7 @@ interface PropertyFeaturesProps {
 }
 
 export default function PropertyFeatures({ property }: PropertyFeaturesProps) {
-  const isResidential = property.type === 'RESIDENTIAL';
+  const isResidential = property.type === 'APARTMENT';
   const bedrooms = property.specifications.apartment?.bedrooms;
   const bathrooms = property.specifications.apartment?.bathrooms;
   const hasElevator = property.specifications.apartment?.hasElevator;
@@ -52,15 +52,15 @@ export default function PropertyFeatures({ property }: PropertyFeaturesProps) {
             </div>
           </div>
           {hasElevator && (
-             <div className="flex items-center gap-3">
-             <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-               <ElevatorIcon />
-             </div>
-             <div>
-               <p className="text-sm text-gray-500 font-medium">مصعد</p>
-               <p className="text-lg font-bold text-gray-900">نعم</p>
-             </div>
-           </div>
+            <div className="flex items-center gap-3">
+              <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
+                <ElevatorIcon />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 font-medium">مصعد</p>
+                <p className="text-lg font-bold text-gray-900">نعم</p>
+              </div>
+            </div>
           )}
         </>
       ) : (
@@ -74,7 +74,7 @@ export default function PropertyFeatures({ property }: PropertyFeaturesProps) {
               <p className="text-lg font-bold text-gray-900">تجاري</p>
             </div>
           </div>
-          
+
           {property.specifications?.shop?.electricityCapacity !== null && property.specifications?.shop?.electricityCapacity !== undefined && (
             <div className="flex items-center gap-3">
               <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
@@ -100,15 +100,15 @@ export default function PropertyFeatures({ property }: PropertyFeaturesProps) {
           )}
 
           {property.specifications?.shop?.commercialLicenseRequired !== null && property.specifications?.shop?.commercialLicenseRequired !== undefined && (
-             <div className="flex items-center gap-3">
-               <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-                 <AssignmentIcon />
-               </div>
-               <div>
-                 <p className="text-sm text-gray-500 font-medium">رخصة تجارية مطلوبة</p>
-                 <p className="text-lg font-bold text-gray-900">{property.specifications.shop.commercialLicenseRequired ? 'نعم' : 'لا'}</p>
-               </div>
-             </div>
+            <div className="flex items-center gap-3">
+              <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
+                <AssignmentIcon />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 font-medium">رخصة تجارية مطلوبة</p>
+                <p className="text-lg font-bold text-gray-900">{property.specifications.shop.commercialLicenseRequired ? 'نعم' : 'لا'}</p>
+              </div>
+            </div>
           )}
         </>
       )}
