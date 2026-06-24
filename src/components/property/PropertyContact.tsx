@@ -5,6 +5,7 @@ import { Property } from '@/types/property';
 
 import Image from 'next/image';
 import BookingModal from './BookingModal';
+import ViewingModal from './ViewingModal';
 
 interface PropertyContactProps {
   property: Property;
@@ -12,6 +13,7 @@ interface PropertyContactProps {
 
 export default function PropertyContact({ property }: PropertyContactProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewingModalOpen, setIsViewingModalOpen] = useState(false);
 
   return (
     <>
@@ -38,6 +40,12 @@ export default function PropertyContact({ property }: PropertyContactProps) {
             إرسال رسالة
           </button>
           <button
+            onClick={() => setIsViewingModalOpen(true)}
+            className="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-600 font-bold py-3 px-4 rounded-xl transition-colors border border-emerald-100"
+          >
+            طلب معاينة
+          </button>
+          <button
             onClick={() => setIsModalOpen(true)}
             className="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold py-3 px-4 rounded-xl transition-colors border border-blue-100"
           >
@@ -55,6 +63,13 @@ export default function PropertyContact({ property }: PropertyContactProps) {
           propertyId={property._id}
           pricePerMonth={property.pricePerMonth}
           onClose={() => setIsModalOpen(false)}
+        />
+      )}
+
+      {isViewingModalOpen && (
+        <ViewingModal
+          propertyId={property._id}
+          onClose={() => setIsViewingModalOpen(false)}
         />
       )}
     </>
