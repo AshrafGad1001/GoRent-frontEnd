@@ -32,6 +32,7 @@ import {
 import GavelIcon from '@mui/icons-material/Gavel';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAdminDisputes } from '../../../../hooks/useAdminDisputes';
+import { useAdminReport } from '../../../../hooks/useAdminReport';
 import { AdminDispute } from '../../../../types/admin';
 
 const statusMap = {
@@ -43,6 +44,7 @@ const statusMap = {
 
 export default function AdminDisputesPage() {
   const { disputes, pagination, page, setPage, isLoading, error, updateDisputeStatus } = useAdminDisputes();
+  const { report, isLoading: isReportLoading, refreshReport } = useAdminReport();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | AdminDispute['status']>('all');
   const [selectedDispute, setSelectedDispute] = useState<AdminDispute | null>(null);
@@ -57,13 +59,11 @@ export default function AdminDisputesPage() {
     });
   }, [disputes, search, statusFilter]);
 
-  const totalOpen = disputes.filter((d) => d.status === 'OPEN' || d.status === 'IN_REVIEW').length;
-  const totalResolved = disputes.filter((d) => d.status === 'RESOLVED').length;
-
-  const handleResolve = (status: AdminDispute['status']) => {
+  const handleResolve = async (status: AdminDispute['status']) => {
     if (selectedDispute) {
-      updateDisputeStatus(selectedDispute._id, status);
+      await updateDisputeStatus(selectedDispute._id, status);
       setSelectedDispute(null);
+      refreshReport();
     }
   };
 
@@ -80,19 +80,37 @@ export default function AdminDisputesPage() {
           <Grid size={{ xs: 12, sm: 4 }}>
             <Paper sx={{ p: 3, textAlign: 'center', borderRadius: 2, border: '1px solid #eaeaea', boxShadow: 'none' }}>
               <Typography variant="h6" color="text.secondary">إجمالي النزاعات</Typography>
-              <Typography variant="h3" color="primary" sx={{ mt: 1, fontWeight: 'bold' }}>{pagination.totalItems}</Typography>
+              {isReportLoading ? (
+                <Skeleton variant="text" width={60} height={48} sx={{ mx: 'auto', mt: 1 }} />
+              ) : (
+                <Typography variant="h3" color="primary" sx={{ mt: 1, fontWeight: 'bold' }}>
+                  {pagination.totalItems}
+                </Typography>
+              )}
             </Paper>
           </Grid>
           <Grid size={{ xs: 12, sm: 4 }}>
             <Paper sx={{ p: 3, textAlign: 'center', borderRadius: 2, border: '1px solid #eaeaea', boxShadow: 'none' }}>
               <Typography variant="h6" color="text.secondary">نزاعات مفتوحة</Typography>
-              <Typography variant="h3" color="warning.main" sx={{ mt: 1, fontWeight: 'bold' }}>{totalOpen}</Typography>
+              {isReportLoading ? (
+                <Skeleton variant="text" width={60} height={48} sx={{ mx: 'auto', mt: 1 }} />
+              ) : (
+                <Typography variant="h3" color="warning.main" sx={{ mt: 1, fontWeight: 'bold' }}>
+                  {report?.openDisputes ?? 0}
+                </Typography>
+              )}
             </Paper>
           </Grid>
           <Grid size={{ xs: 12, sm: 4 }}>
             <Paper sx={{ p: 3, textAlign: 'center', borderRadius: 2, border: '1px solid #eaeaea', boxShadow: 'none' }}>
               <Typography variant="h6" color="text.secondary">نزاعات محلولة</Typography>
-              <Typography variant="h3" color="success.main" sx={{ mt: 1, fontWeight: 'bold' }}>{totalResolved}</Typography>
+              {isReportLoading ? (
+                <Skeleton variant="text" width={60} height={48} sx={{ mx: 'auto', mt: 1 }} />
+              ) : (
+                <Typography variant="h3" color="success.main" sx={{ mt: 1, fontWeight: 'bold' }}>
+                  {report?.resolvedDisputes ?? 0}
+                </Typography>
+              )}
             </Paper>
           </Grid>
         </Grid>

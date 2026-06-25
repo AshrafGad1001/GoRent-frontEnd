@@ -17,7 +17,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { useAdminReport } from '../../../../hooks/useAdminReport';
+import { useAdminReport } from '@/hooks/useAdminReport';
 
 export default function AdminReportsPage() {
   const { report, isLoading, error } = useAdminReport();
@@ -179,12 +179,18 @@ export default function AdminReportsPage() {
                       </TableCell>
                     </TableRow>
                   )}
-                  {report.topProperties.map((p) => (
-                    <TableRow key={p.title} hover>
-                      <TableCell sx={{ fontWeight: 600 }}>{p.title}</TableCell>
-                      <TableCell>{p.bookings}</TableCell>
-                      <TableCell>{p.revenue.toLocaleString()} ج.م</TableCell>
-                    </TableRow>
+                  {report.topProperties.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={3}>
+                        </TableCell>
+                      </TableRow>
+                  )}
+                  {report.topProperties.map((p, index) => (
+                      <TableRow key={`${p.title}-${index}`} hover>
+                        <TableCell sx={{ fontWeight: 600 }}>{p.title}</TableCell>
+                        <TableCell>{p.bookings}</TableCell>
+                        <TableCell>{p.revenue.toLocaleString()} ج.م</TableCell>
+                      </TableRow>
                   ))}
                 </TableBody>
               </Table>

@@ -27,10 +27,12 @@ import {
 import ReviewsIcon from '@mui/icons-material/Reviews';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAdminReviews } from '../../../../hooks/useAdminReviews';
+import { useAdminReport } from '../../../../hooks/useAdminReport';
 import { AdminReview } from '../../../../types/admin';
 
 export default function AdminReviewsPage() {
   const { reviews, pagination, page, setPage, isLoading, error, deleteReview } = useAdminReviews();
+  const { report, isLoading: isReportLoading, refreshReport } = useAdminReport();
   const [search, setSearch] = useState('');
   const [reviewToDelete, setReviewToDelete] = useState<AdminReview | null>(null);
 
@@ -42,16 +44,11 @@ export default function AdminReviewsPage() {
     );
   }, [reviews, search]);
 
-  const averageRating =
-      reviews.length === 0
-          ? 0
-          : reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
-  const totalNegative = reviews.filter((r) => r.rating <= 2).length;
-
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (reviewToDelete) {
-      deleteReview(reviewToDelete._id);
+      await deleteReview(reviewToDelete._id);
       setReviewToDelete(null);
+      refreshReport();
     }
   };
 
@@ -68,21 +65,37 @@ export default function AdminReviewsPage() {
           <Grid size={{ xs: 12, sm: 4 }}>
             <Paper sx={{ p: 3, textAlign: 'center', borderRadius: 2, border: '1px solid #eaeaea', boxShadow: 'none' }}>
               <Typography variant="h6" color="text.secondary">إجمالي التقييمات</Typography>
-              <Typography variant="h3" color="primary" sx={{ mt: 1, fontWeight: 'bold' }}>{pagination.totalItems}</Typography>
+              {isReportLoading ? (
+                <Skeleton variant="text" width={60} height={48} sx={{ mx: 'auto', mt: 1 }} />
+              ) : (
+                <Typography variant="h3" color="primary" sx={{ mt: 1, fontWeight: 'bold' }}>
+                  {report?.totalReviews ?? 0}
+                </Typography>
+              )}
             </Paper>
           </Grid>
           <Grid size={{ xs: 12, sm: 4 }}>
             <Paper sx={{ p: 3, textAlign: 'center', borderRadius: 2, border: '1px solid #eaeaea', boxShadow: 'none' }}>
               <Typography variant="h6" color="text.secondary">متوسط التقييم</Typography>
-              <Typography variant="h3" color="warning.main" sx={{ mt: 1, fontWeight: 'bold' }}>
-                {averageRating.toFixed(1)}
-              </Typography>
+              {isReportLoading ? (
+                <Skeleton variant="text" width={60} height={48} sx={{ mx: 'auto', mt: 1 }} />
+              ) : (
+                <Typography variant="h3" color="warning.main" sx={{ mt: 1, fontWeight: 'bold' }}>
+                  {report?.averageRating?.toFixed(1) ?? '0.0'}
+                </Typography>
+              )}
             </Paper>
           </Grid>
           <Grid size={{ xs: 12, sm: 4 }}>
             <Paper sx={{ p: 3, textAlign: 'center', borderRadius: 2, border: '1px solid #eaeaea', boxShadow: 'none' }}>
               <Typography variant="h6" color="text.secondary">تقييمات سلبية (1-2 نجمة)</Typography>
-              <Typography variant="h3" color="error.main" sx={{ mt: 1, fontWeight: 'bold' }}>{totalNegative}</Typography>
+              {isReportLoading ? (
+                <Skeleton variant="text" width={60} height={48} sx={{ mx: 'auto', mt: 1 }} />
+              ) : (
+                <Typography variant="h3" color="error.main" sx={{ mt: 1, fontWeight: 'bold' }}>
+                  {report?.negativeReviews ?? 0}
+                </Typography>
+              )}
             </Paper>
           </Grid>
         </Grid>

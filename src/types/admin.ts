@@ -72,4 +72,6 @@ export interface PlatformReport {
   resolvedDisputes: number;
   averageRating: number;
   topProperties: TopProperty[];
+  totalReviews: number;
+  negativeReviews: number;
 }
