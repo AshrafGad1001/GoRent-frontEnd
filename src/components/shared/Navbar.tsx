@@ -16,13 +16,12 @@ import Tooltip from "@mui/material/Tooltip";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "../../hooks/useAuth";
+import NotificationMenu from "./NotificationMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
 
 const pages = [
-  { name: "الرئيسية", path: "/" },
-  { name: "العقارات", path: "/properties" },
   { name: "عن الشركة", path: "/about" },
   { name: "تواصل معنا", path: "/contact" },
 ];
@@ -120,37 +119,44 @@ export default function Navbar() {
           </Box>
 
           {/* Auth section */}
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center" }}>
             {isAuthenticated && user ? (
-              <Tooltip title={user?.role === "owner" ? "لوحة تحكم المالك" : "الملف الشخصي"}>
-                <IconButton
-                  component={Link}
-                  href={
-                    user?.role === "tenant"
-                      ? "/Profile"
-                      : user.role === "owner"
-                        ? "/dashboard/owner"
-                        : user.role === "admin"
-                          ? "/dashboard/admin"
-                          : user.role === "superadmin"
-                            ? "/dashboard/superadmin"
-                            : ""
+              <>
+                <NotificationMenu />
+                <Tooltip
+                  title={
+                    user?.role === "owner" ? "لوحة تحكم المالك" : "الملف الشخصي"
                   }
-                  sx={{ p: 0 }}
                 >
-                  <Avatar
-                    src={user.profileImage}
-                    sx={{
-                      bgcolor: "primary.main",
-                      border: "2px solid",
-                      borderColor: "primary.main",
-                      boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
-                    }}
+                  <IconButton
+                    component={Link}
+                    href={
+                      user?.role === "tenant"
+                        ? "/Profile"
+                        : user.role === "owner"
+                          ? "/dashboard/owner"
+                          : user.role === "admin"
+                            ? "/dashboard/admin"
+                            : user.role === "superadmin"
+                              ? "/dashboard/superadmin"
+                              : ""
+                    }
+                    sx={{ p: 0 }}
                   >
-                    {!user.profileImage && (user.name ? user.name[0].toUpperCase() : "U")}
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
+                    <Avatar
+                      src={user.profileImage}
+                      sx={{
+                        bgcolor: "primary.main",
+                        border: "2px solid",
+                        borderColor: "primary.main",
+                        boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
+                      }}
+                    >
+                      {!user.profileImage && (user.name ? user.name[0].toUpperCase() : "U")}
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+              </>
             ) : (
               <Button
                 variant="contained"
