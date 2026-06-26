@@ -20,6 +20,7 @@ import NotificationMenu from "./NotificationMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
+
 const pages = [
   { name: "عن الشركة", path: "/about" },
   { name: "تواصل معنا", path: "/contact" },
@@ -45,7 +46,13 @@ export default function Navbar() {
 
           {/* Desktop Logo */}
           <Box component={Link} href="/" sx={{ display: { xs: "none", md: "flex" }, mr: 2 }}>
-            <Image src="/GoRent-logo.png" alt="GoRent" height={32} width={96} />
+            <Image
+              src="/GoRent-logo.png"
+              alt="GoRent"
+              height={32}
+              width={96}
+              style={{ objectFit: 'contain' }}
+            />
           </Box>
 
           {/* Mobile Menu */}
@@ -87,7 +94,13 @@ export default function Navbar() {
 
           {/* Mobile Logo */}
           <Box component={Link} href="/" sx={{ display: { xs: "flex", md: "none" }, flexGrow: 1, mr: 2 }}>
-            <Image src="/GoRent-logo.png" alt="GoRent" height={28} width={84} />
+            <Image
+              src="/GoRent-logo.png"
+              alt="GoRent"
+              height={28}
+              width={84}
+              style={{ objectFit: 'contain' }}
+            />
           </Box>
 
           {/* Desktop Links */}

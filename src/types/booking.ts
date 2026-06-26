@@ -4,14 +4,21 @@ export interface Booking {
     _id: string;
     title: string;
     pricePerMonth: number;
+    pricePerDay?: number;
     location: string | { type: string; coordinates: number[] };
     address?: string;
-  };
+  } | null;
   tenantId: string;
+  paymentId?: string | null;
+  ownerAccepted: boolean;
+  status: "PENDING_OWNER_APPROVAL" | "REJECTED" | "PENDING_PAYMENT" | "RESERVED" | "CANCELLED";
+  contractPdfUrl?: string;
+  signatures: {
+    tenantSigned: boolean;
+    ownerSigned: boolean;
+  };
   startDate: string;
   endDate: string;
-  amountPaid: number;
-  status: "PENDING_PAYMENT" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
   createdAt: string;
 }
 
@@ -30,9 +37,9 @@ export interface CreatedBooking {
   _id: string;
   propertyId: string;
   tenantId: string;
-  stripePaymentIntentId: string;
-  amountPaid: number;
-  status: "PENDING" | "APPROVED" | "CANCELLED";
+  paymentId: string | null;
+  ownerAccepted: boolean;
+  status: "PENDING_OWNER_APPROVAL" | "REJECTED" | "PENDING_PAYMENT" | "RESERVED" | "CANCELLED";
   contractPdfUrl: string;
   signatures: BookingSignatures;
   startDate: string;
@@ -50,5 +57,6 @@ export interface CreateBookingResponse {
 export interface BookingModalProps {
   propertyId: string;
   pricePerMonth: number;
+  pricePerDay?: number;
   onClose: () => void;
 }
