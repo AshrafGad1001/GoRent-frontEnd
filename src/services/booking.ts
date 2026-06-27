@@ -36,14 +36,16 @@
 //         });
 //     },
 // };
-
-
 import { fetchApi } from "./auth";
-import { CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
+import { Booking, CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
+
+interface GetTenantBookingsResponse {
+    bookings: Booking[];
+}
 
 export const bookingService = {
-    getTenantBookings: async () => {
-        return fetchApi("/api/bookings/tenant");
+    getTenantBookings: async (): Promise<GetTenantBookingsResponse> => {
+        return fetchApi<GetTenantBookingsResponse>("/api/bookings/tenant");
     },
 
     cancelBooking: async (id: string) => {
