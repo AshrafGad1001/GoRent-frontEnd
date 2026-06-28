@@ -6,6 +6,11 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Property } from '@/types/property';
 import Image from 'next/image';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { useTheme } from '@mui/material/styles';
 
 // Fix Leaflet's default icon path issues with Next.js
 const icon = L.icon({
@@ -60,6 +65,7 @@ function MapRecenter({ center }: { center?: { lat: number; lng: number } }) {
 }
 
 export default function PropertyMap({ properties, searchCenter, searchRadius, onMapClick }: PropertyMapProps) {
+  const theme = useTheme();
   // Default center
   const defaultCenter: [number, number] = [30.0444, 31.2357];
 
@@ -100,25 +106,67 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
   };
 
   return (
-    <div className="w-full h-full min-h-[500px] rounded-2xl overflow-hidden shadow-lg border border-gray-200 z-0 relative">
-
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        minHeight: 500,
+        borderRadius: 2,
+        overflow: 'hidden',
+        boxShadow: 8,
+        border: '1px solid',
+        borderColor: 'divider',
+        zIndex: 0,
+        position: 'relative',
+      }}
+    >
       {/* Overlay Controls */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-white rounded-lg shadow-xl p-3 flex flex-col md:flex-row gap-4 items-center w-[90%] md:w-auto">
-        <form onSubmit={handleSearchLocation} className="flex gap-2">
-          <input
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 16,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          bgcolor: 'background.paper',
+          borderRadius: 1,
+          boxShadow: 8,
+          p: 1.5,
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 2,
+          alignItems: 'center',
+          width: { xs: '90%', md: 'auto' },
+        }}
+      >
+        <form onSubmit={handleSearchLocation} style={{ display: 'flex', gap: 8 }}>
+          <TextField
             type="text"
             placeholder="ابحث عن موقع (مثل: القاهرة)"
-            className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 w-full md:w-64"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            size="small"
+            sx={{ width: { xs: '100%', md: 256 } }}
           />
-          <button type="submit" className="bg-zinc-800 text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-zinc-900">
+          <Button type="submit" variant="contained" size="small" sx={{ textTransform: 'none' }}>
             بحث
-          </button>
+          </Button>
         </form>
 
-        <div className="flex items-center gap-2 border-t md:border-t-0 md:border-r border-gray-200 pt-2 md:pt-0 md:pr-4 w-full md:w-auto">
-          <span className="text-xs text-gray-500 font-medium">النطاق:</span>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            borderTop: { xs: '1px solid', md: 'none' },
+            borderRight: { xs: 'none', md: '1px solid' },
+            borderColor: 'divider',
+            paddingTop: { xs: 1, md: 0 },
+            paddingRight: { xs: 0, md: 2 },
+            width: { xs: '100%', md: 'auto' },
+          }}
+        >
+          <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500 }}>النطاق:</Typography>
           <input
             type="range"
             min="1000"
@@ -130,9 +178,9 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
             onTouchEnd={applyRadius}
             className="w-24 md:w-32"
           />
-          <span className="text-xs font-semibold">{radiusInput / 1000} كم</span>
-        </div>
-      </div>
+          <Typography sx={{ fontSize: '0.75rem', fontWeight: 600 }}>{radiusInput / 1000} كم</Typography>
+        </Box>
+      </Box>
 
       <MapContainer
         center={searchCenter ? [searchCenter.lat, searchCenter.lng] : defaultCenter}
@@ -152,7 +200,7 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
           <Circle
             center={[searchCenter.lat, searchCenter.lng]}
             radius={searchRadius}
-            pathOptions={{ color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.1 }}
+            pathOptions={{ color: theme.palette.info.main, fillColor: theme.palette.info.main, fillOpacity: 0.1 }}
           />
         )}
 
@@ -163,7 +211,7 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
 
           return (
             <Marker key={property._id} position={[lat, lng]} icon={icon}>
-              <Popup className="rounded-xl overflow-hidden">
+              <Popup>
                 <div className="w-48">
                   {property.images && property.images.length > 0 && (
                     <div className="w-full h-24 relative mb-2 rounded-md overflow-hidden">
@@ -184,6 +232,6 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
           );
         })}
       </MapContainer>
-    </div>
+    </Box>
   );
 }
