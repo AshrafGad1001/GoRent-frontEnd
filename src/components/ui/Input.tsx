@@ -6,8 +6,8 @@ import { styled } from '@mui/material/styles';
 
 const StyledTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    borderRadius: 8,
-    backgroundColor: theme.palette.mode === 'light' ? '#fff' : '#222',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.background.paper,
     transition: 'all 0.2s ease-in-out',
     '&:hover fieldset': {
       borderColor: theme.palette.primary.main,
