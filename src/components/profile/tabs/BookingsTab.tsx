@@ -1,12 +1,13 @@
 "use client";
 
-import { Box, Typography, Skeleton, Alert } from "@mui/material";
+import { Box, Typography, Skeleton, Alert, IconButton, Tooltip } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { useBookings } from "../../../hooks/useBookings";
 import BookingCard from "../../Booking/BookingCard";
 
 export default function BookingsTab() {
-    const { bookings, isLoading, error, cancelBooking } = useBookings();
+    const { bookings, isLoading, error, cancelBooking, fetchBookings } = useBookings();
 
     if (isLoading) {
         return (
@@ -35,6 +36,13 @@ export default function BookingsTab() {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: '100%' }}>
+            {/* <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Tooltip title="تحديث الحجوزات">
+                    <IconButton onClick={fetchBookings} size="small" color="primary">
+                        <RefreshIcon fontSize="small" />
+                    </IconButton>
+                </Tooltip>
+            </Box> */}
             {bookings.map((booking) => (
                 <BookingCard
                     key={booking._id}

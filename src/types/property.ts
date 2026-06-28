@@ -119,6 +119,7 @@ export interface Property {
   squareFootage: number;
   images: string[];
   isAvailable: boolean;
+  listingPaid: boolean; //For payment
   status: string;
   location: {
     type: string;
