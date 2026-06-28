@@ -1,7 +1,7 @@
 import { fetchApi } from "./auth";
 import { Property, PropertyResponse, PropertyFilters } from "../types/property";
 
-export const propertyService = {
+export const propertyServicenorhan = {
   fetchProperties: async (
     filters?: PropertyFilters,
   ): Promise<PropertyResponse> => {
