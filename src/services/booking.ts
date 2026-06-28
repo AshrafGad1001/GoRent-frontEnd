@@ -1,10 +1,10 @@
 import { fetchApi } from "./auth";
-import { CreateBookingRequest, CreateBookingResponse, OwnerBookingsResponse, OwnerAnalytics } from "@/types/booking";
+import { Booking, CreateBookingRequest, CreateBookingResponse, OwnerBookingsResponse, OwnerAnalytics } from "@/types/booking";
 
 export const bookingService = {
   // Tenant actions
-  getTenantBookings: async () => {
-    return fetchApi("/api/bookings/tenant");
+  getTenantBookings: async (): Promise<{ bookings: Booking[] }> => {
+    return fetchApi<{ bookings: Booking[] }>("/api/bookings/tenant");
   },
 
   cancelBooking: async (id: string) => {

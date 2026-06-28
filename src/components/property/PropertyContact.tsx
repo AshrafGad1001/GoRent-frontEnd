@@ -15,6 +15,10 @@ export default function PropertyContact({ property }: PropertyContactProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewingModalOpen, setIsViewingModalOpen] = useState(false);
 
+  const owner = typeof property.ownerId === 'string'
+    ? { _id: property.ownerId, name: 'Owner', email: '' }
+    : (property.ownerId as unknown as { _id: string; name: string; email: string; });
+
   return (
     <>
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sticky top-8">
@@ -23,15 +27,15 @@ export default function PropertyContact({ property }: PropertyContactProps) {
         <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
           <div className="w-16 h-16 relative rounded-full flex items-center justify-center text-xl font-bold text-zinc-600 overflow-hidden bg-zinc-200">
             <Image
-              src={`https://i.pravatar.cc/150?u=${property.ownerId._id}`}
-              alt={property.ownerId.name}
+              src={`https://i.pravatar.cc/150?u=${owner._id}`}
+              alt={owner.name}
               fill
               className="object-cover"
             />
           </div>
           <div>
-            <p className="font-bold text-gray-900 text-lg">{property.ownerId.name}</p>
-            <p className="text-sm text-gray-500">{property.ownerId.email}</p>
+            <p className="font-bold text-gray-900 text-lg">{owner.name}</p>
+            <p className="text-sm text-gray-500">{owner.email}</p>
           </div>
         </div>
 

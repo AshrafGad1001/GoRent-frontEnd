@@ -15,9 +15,9 @@ interface PropertyFeaturesProps {
 
 export default function PropertyFeatures({ property }: PropertyFeaturesProps) {
   const isResidential = property.type === 'APARTMENT';
-  const bedrooms = property.specifications.apartment?.bedrooms;
-  const bathrooms = property.specifications.apartment?.bathrooms;
-  const hasElevator = property.specifications.apartment?.hasElevator;
+  const bedrooms = property.specifications?.apartment?.bedrooms;
+  const bathrooms = property.specifications?.apartment?.bathrooms;
+  const hasElevator = property.specifications?.apartment?.hasElevator;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-wrap gap-8 items-center justify-between mb-10">
