@@ -5,7 +5,7 @@ import MuiButton, { ButtonProps as MuiButtonProps } from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
 const StyledButton = styled(MuiButton)<MuiButtonProps>(({ theme }) => ({
-  borderRadius: 8,
+  borderRadius: theme.shape.borderRadius,
   textTransform: 'none',
   fontWeight: 'bold',
   padding: '10px 24px',

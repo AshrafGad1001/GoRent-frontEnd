@@ -11,7 +11,7 @@ export interface CustomCardProps extends MuiCardProps {
 const StyledCard = styled(MuiCard, {
   shouldForwardProp: (prop) => prop !== 'interactive',
 })<CustomCardProps>(({ theme, interactive }) => ({
-  borderRadius: 16,
+  borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[1],
   border: `1px solid ${theme.palette.divider}`,
   transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',

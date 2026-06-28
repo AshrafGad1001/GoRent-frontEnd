@@ -1,15 +1,12 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: #1976d2;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html,
+body {
+  padding: 0;
+  margin: 0;
 }
 
-.leaflet-container {
-  z-index: 0;
-  font-family: inherit;
+* {
+  box-sizing: border-box;
 }

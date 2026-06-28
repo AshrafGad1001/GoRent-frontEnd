@@ -1,4 +1,10 @@
+"use client";
+
 import React from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { CreatedBooking } from "@/types/booking";
 
 interface BookingSuccessStepProps {
@@ -13,48 +19,74 @@ export default function BookingSuccessStep({
   onClose,
 }: BookingSuccessStepProps) {
   return (
-    <div className="text-center py-4">
+    <Box sx={{ textAlign: "center", py: 4 }}>
       {/* Check icon */}
-      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg
-          className="w-8 h-8 text-green-600"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2.5}
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-      </div>
+      <Box
+        sx={{
+          width: 64,
+          height: 64,
+          bgcolor: (theme) =>
+            theme.palette.mode === "light"
+              ? "rgba(22, 163, 74, 0.1)"
+              : "rgba(74, 222, 128, 0.1)",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          mx: "auto",
+          mb: 3,
+        }}
+      >
+        <CheckCircleIcon sx={{ fontSize: 40, color: "success.main" }} />
+      </Box>
 
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{message}</h3>
+      <Typography variant="h6" sx={{ fontWeight: "bold", color: "text.primary", mb: 1 }}>
+        {message}
+      </Typography>
 
-      <p className="text-gray-500 text-sm mb-1">
+      <Typography variant="body2" sx={{ color: "text.secondary", mb: 0.5 }}>
         رقم الحجز:{" "}
-        <span className="font-mono text-gray-800 text-xs">{booking._id}</span>
-      </p>
+        <Typography
+          component="span"
+          sx={{ fontFamily: "monospace", color: "text.primary", fontSize: "0.75rem" }}
+        >
+          {booking._id}
+        </Typography>
+      </Typography>
 
-      {/* <p className="text-gray-500 text-sm mb-1">
-        المبلغ المدفوع:{" "}
-        <span className="font-bold text-gray-800">
-          {booking.amountPaid.toLocaleString("ar-EG")} ج.م
-        </span>
-      </p> */}
-
-      <div className="inline-block mt-3 px-3 py-1 bg-yellow-50 border border-yellow-200 text-yellow-700 text-xs font-semibold rounded-full">
+      <Box
+        component="span"
+        sx={{
+          display: "inline-block",
+          mt: 2,
+          px: 2,
+          py: 0.5,
+          bgcolor: (theme) =>
+            theme.palette.mode === "light"
+              ? "rgba(217, 119, 6, 0.1)"
+              : "rgba(251, 191, 36, 0.1)",
+          border: "1px solid",
+          borderColor: (theme) =>
+            theme.palette.mode === "light"
+              ? "rgba(217, 119, 6, 0.3)"
+              : "rgba(251, 191, 36, 0.3)",
+          color: "warning.main",
+          borderRadius: "50px",
+          fontSize: "0.75rem",
+          fontWeight: 600,
+        }}
+      >
         في انتظار موافقة المالك
-      </div>
+      </Box>
 
-      <button
+      <Button
         onClick={onClose}
-        className="mt-6 w-full bg-zinc-800 hover:bg-zinc-900 text-white font-bold py-3 rounded-xl transition-colors"
+        variant="contained"
+        fullWidth
+        sx={{ mt: 3, py: 1.5 }}
       >
         حسناً
-      </button>
-    </div>
+      </Button>
+    </Box>
   );
 }

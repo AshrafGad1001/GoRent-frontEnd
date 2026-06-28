@@ -1,13 +1,18 @@
 "use client";
 
 import React from 'react';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputBase from '@mui/material/InputBase';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { PropertyFilters } from "@/types/property";
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import SquareFootIcon from '@mui/icons-material/SquareFoot';
-import BedIcon from '@mui/icons-material/Bed';
-import BathtubIcon from '@mui/icons-material/Bathtub';
+import PaymentsIcon from '@mui/icons-material/Payments';
 
 interface FilterBarProps {
   filters: PropertyFilters;
@@ -15,119 +20,155 @@ interface FilterBarProps {
   onSearch: () => void;
 }
 
+// Small reusable wrapper so every filter "cell" shares the same label +
+// icon + spacing layout without repeating it per field.
+function FilterField({
+  icon,
+  label,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: { xs: 1, md: 2 }, py: 1, width: '100%' }}>
+      <Box sx={{ color: 'text.secondary', display: 'flex' }}>{icon}</Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+        <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+          {label}
+        </Typography>
+        {children}
+      </Box>
+    </Box>
+  );
+}
+
 export default function FilterBar({ filters, onFilterChange, onSearch }: FilterBarProps) {
   return (
-    <div className="bg-white rounded-3xl p-4 shadow-xl flex flex-col w-full max-w-6xl gap-4">
-      {/* Top Row: Main Filters */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+    <Paper
+      elevation={0}
+      sx={{
+        bgcolor: 'background.paper',
+        borderRadius: 5,
+        p: { xs: 2, md: 2.5 },
+        width: '100%',
+        maxWidth: '900px',
+        boxShadow: (theme) =>
+          theme.palette.mode === 'light'
+            ? '0 10px 40px rgba(15, 23, 42, 0.18)'
+            : '0 10px 40px rgba(0, 0, 0, 0.5)',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto 1fr',
+          alignItems: 'center',
+        }}
+      >
+        <FilterField icon={<HomeIcon fontSize="small" />} label="نوع العقار">
+          <Select
+            value={filters.type || ''}
+            onChange={(e) => onFilterChange('type', e.target.value)}
+            variant="standard"
+            disableUnderline
+            fullWidth
+            sx={{ fontSize: '0.9rem', fontWeight: 500, color: 'text.primary' }}
+          >
+            <MenuItem value="">أي نوع</MenuItem>
+            <MenuItem value="APARTMENT">شقة</MenuItem>
+            <MenuItem value="COMMERCIAL">محل تجاري</MenuItem>
+          </Select>
+        </FilterField>
 
-        <div className="flex items-center px-2 md:px-4 py-2 w-full">
-          <HomeIcon className="text-gray-400 mr-2" />
-          <div className="flex flex-col items-start w-full">
-            <span className="text-xs font-semibold text-gray-500">نوع العقار</span>
-            <select
-              className="w-full text-sm font-medium text-gray-800 bg-transparent focus:outline-none appearance-none cursor-pointer"
-              value={filters.type || ''}
-              onChange={(e) => onFilterChange('type', e.target.value)}
-            >
-              <option value="">أي نوع</option>
-              <option value="APARTMENT">شقة</option>
-              <option value="COMMERCIAL">محل تجاري</option>
-            </select>
-          </div>
-        </div>
+        <Divider orientation="vertical" flexItem sx={{ mx: 1, height: '70%' }} />
 
-        <div className="flex items-center px-2 md:px-4 py-2 w-full">
-          <AttachMoneyIcon className="text-gray-400 mr-2" />
-          <div className="flex flex-col items-start w-full">
-            <span className="text-xs font-semibold text-gray-500">نطاق السعر</span>
-            <div className="flex items-center gap-2 w-full">
-              <input
-                type="number"
-                placeholder="الأدنى"
-                className="w-1/2 text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
-                value={filters.minPrice || ''}
-                onChange={(e) => onFilterChange('minPrice', e.target.value ? Number(e.target.value) : undefined)}
-              />
-              <span className="text-gray-400">-</span>
-              <input
-                type="number"
-                placeholder="الأقصى"
-                className="w-1/2 text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
-                value={filters.maxPrice || ''}
-                onChange={(e) => onFilterChange('maxPrice', e.target.value ? Number(e.target.value) : undefined)}
-              />
-            </div>
-          </div>
-        </div>
+        <FilterField icon={<PaymentsIcon fontSize="small" />} label="نطاق السعر">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+            <InputBase
+              type="number"
+              placeholder="الأدنى"
+              inputProps={{ min: 0 }}
+              value={filters.minPrice ?? ''}
+              onChange={(e) => {
+                const raw = e.target.value;
+                if (raw === '') {
+                  onFilterChange('minPrice', undefined);
+                  return;
+                }
+                const num = Math.max(0, Number(raw));
+                onFilterChange('minPrice', num);
+              }}
+              sx={{
+                fontSize: '0.9rem',
+                fontWeight: 500,
+                width: '50%',
+                // Hide the native up/down spinner arrows on number inputs
+                '& input[type=number]': { MozAppearance: 'textfield' },
+                '& input[type=number]::-webkit-outer-spin-button': {
+                  WebkitAppearance: 'none',
+                  margin: 0,
+                },
+                '& input[type=number]::-webkit-inner-spin-button': {
+                  WebkitAppearance: 'none',
+                  margin: 0,
+                },
+              }}
+            />
+            <Typography color="text.disabled">-</Typography>
+            <InputBase
+              type="number"
+              placeholder="الأقصى"
+              inputProps={{ min: 0 }}
+              value={filters.maxPrice ?? ''}
+              onChange={(e) => {
+                const raw = e.target.value;
+                if (raw === '') {
+                  onFilterChange('maxPrice', undefined);
+                  return;
+                }
+                const num = Math.max(0, Number(raw));
+                onFilterChange('maxPrice', num);
+              }}
+              sx={{
+                fontSize: '0.9rem',
+                fontWeight: 500,
+                width: '50%',
+                '& input[type=number]': { MozAppearance: 'textfield' },
+                '& input[type=number]::-webkit-outer-spin-button': {
+                  WebkitAppearance: 'none',
+                  margin: 0,
+                },
+                '& input[type=number]::-webkit-inner-spin-button': {
+                  WebkitAppearance: 'none',
+                  margin: 0,
+                },
+              }}
+            />
+          </Box>
+        </FilterField>
+      </Box>
 
-        <div className="flex items-center px-2 md:px-4 py-2 w-full">
-          <SquareFootIcon className="text-gray-400 mr-2" />
-          <div className="flex flex-col items-start w-full">
-            <span className="text-xs font-semibold text-gray-500">المساحة (متر مربع)</span>
-            <div className="flex items-center gap-2 w-full">
-              <input
-                type="number"
-                placeholder="الأدنى"
-                className="w-1/2 text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
-                value={filters.minSize || ''}
-                onChange={(e) => onFilterChange('minSize', e.target.value ? Number(e.target.value) : undefined)}
-              />
-              <span className="text-gray-400">-</span>
-              <input
-                type="number"
-                placeholder="الأقصى"
-                className="w-1/2 text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
-                value={filters.maxSize || ''}
-                onChange={(e) => onFilterChange('maxSize', e.target.value ? Number(e.target.value) : undefined)}
-              />
-            </div>
-          </div>
-        </div>
+      <Divider sx={{ my: 1.5 }} />
 
-        <div className="flex items-center px-2 md:px-4 py-2 w-full">
-          <BedIcon className="text-gray-400 mr-2" />
-          <div className="flex flex-col items-start w-full">
-            <span className="text-xs font-semibold text-gray-500">الغرف</span>
-            <div className="flex items-center gap-2 w-full">
-              <div className="flex items-center w-1/2" title="غرف النوم">
-                <input
-                  type="number"
-                  placeholder="نوم"
-                  min="0"
-                  className="w-full text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
-                  value={filters.bedrooms || ''}
-                  onChange={(e) => onFilterChange('bedrooms', e.target.value ? Number(e.target.value) : undefined)}
-                />
-              </div>
-              <span className="text-gray-400">|</span>
-              <div className="flex items-center w-1/2" title="الحمامات">
-                <BathtubIcon className="text-gray-400 text-sm ml-1 hidden lg:block" />
-                <input
-                  type="number"
-                  placeholder="حمامات"
-                  min="0"
-                  className="w-full text-sm font-medium text-gray-800 bg-transparent focus:outline-none placeholder-gray-400 border-b border-transparent focus:border-gray-300 transition-colors"
-                  value={filters.bathrooms || ''}
-                  onChange={(e) => onFilterChange('bathrooms', e.target.value ? Number(e.target.value) : undefined)}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Bottom Row: Search Button */}
-      <div className="flex justify-end px-2 md:px-4 pt-2 border-t border-gray-100">
-        <button
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: { xs: 1, md: 2 } }}>
+        <Button
           onClick={onSearch}
-          className="w-full sm:w-auto bg-zinc-800 hover:bg-zinc-900 text-white font-medium py-2.5 px-8 rounded-full transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+          variant="contained"
+          color="primary"
+          startIcon={<SearchIcon fontSize="small" />}
+          sx={{
+            width: { xs: '100%', sm: 'auto' },
+            borderRadius: 10,
+            px: 4,
+            py: 1.2,
+            fontWeight: 600,
+          }}
         >
-          <SearchIcon fontSize="small" />
           البحث عن عقارات
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Paper>
   );
 }

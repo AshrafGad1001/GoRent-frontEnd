@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import { Property } from '@/types/property';
-
 import Image from 'next/image';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import BookingModal from './BookingModal';
 import ViewingModal from './ViewingModal';
 
@@ -15,48 +17,95 @@ export default function PropertyContact({ property }: PropertyContactProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewingModalOpen, setIsViewingModalOpen] = useState(false);
 
+  
+  const ownerAvatar = (property.ownerId as Record<string, unknown>).avatar as string | undefined;
+
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sticky top-8">
-        <h3 className="text-lg font-bold text-gray-900 mb-6">تواصل مع المالك</h3>
+      <Box
+        sx={{
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+          p: 3,
+          position: 'sticky',
+          top: 2,
+        }}
+      >
+        <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold', color: 'text.primary' }}>
+          تواصل مع المالك
+        </Typography>
 
-        <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
-          <div className="w-16 h-16 relative rounded-full flex items-center justify-center text-xl font-bold text-zinc-600 overflow-hidden bg-zinc-200">
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3, pb: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
+          <Box
+            sx={{
+              width: 64,
+              height: 64,
+              position: 'relative',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.25rem',
+              fontWeight: 'bold',
+              color: 'text.secondary',
+              overflow: 'hidden',
+              bgcolor: 'background.default',
+            }}
+          >
             <Image
-              src={`https://i.pravatar.cc/150?u=${property.ownerId._id}`}
+              src={ownerAvatar || '/user-default.jpg'}
               alt={property.ownerId.name}
               fill
               className="object-cover"
             />
-          </div>
-          <div>
-            <p className="font-bold text-gray-900 text-lg">{property.ownerId.name}</p>
-            <p className="text-sm text-gray-500">{property.ownerId.email}</p>
-          </div>
-        </div>
+          </Box>
+          <Box>
+            <Typography sx={{ fontWeight: 'bold', color: 'text.primary', fontSize: '1.125rem' }}>
+              {property.ownerId.name}
+            </Typography>
+            <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+              {property.ownerId.email}
+            </Typography>
+          </Box>
+        </Box>
 
-        <div className="space-y-4">
-          <button className="w-full bg-zinc-800 hover:bg-zinc-900 text-white font-bold py-3 px-4 rounded-xl transition-colors">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ py: 1.5, borderRadius: 1.5 }}
+          >
             إرسال رسالة
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outlined"
+            color="success"
+            fullWidth
+            sx={{ py: 1.5, borderRadius: 1.5 }}
             onClick={() => setIsViewingModalOpen(true)}
-            className="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-600 font-bold py-3 px-4 rounded-xl transition-colors border border-emerald-100"
           >
             طلب معاينة
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outlined"
+            color="info"
+            fullWidth
+            sx={{ py: 1.5, borderRadius: 1.5 }}
             onClick={() => setIsModalOpen(true)}
-            className="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold py-3 px-4 rounded-xl transition-colors border border-blue-100"
           >
             احجز الآن
-          </button>
-        </div>
+          </Button>
+        </Box>
 
-        <div className="mt-6 pt-6 border-t border-gray-100 text-center">
-          <p className="text-xs text-gray-400">معروض على GoRent • رقم المرجع: {property._id}</p>
-        </div>
-      </div>
+        <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid', borderColor: 'divider', textAlign: 'center' }}>
+          <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+            معروض على GoRent • رقم المرجع: {property._id}
+          </Typography>
+        </Box>
+      </Box>
 
       {isModalOpen && (
         <BookingModal
