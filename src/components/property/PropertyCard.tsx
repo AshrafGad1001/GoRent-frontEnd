@@ -60,7 +60,6 @@ function PropertyRating({ propertyId, ownerId }: { propertyId: string, ownerId: 
         precision={1}
         readOnly
         size="small"
-        sx={{ color: 'warning.main' }}
       />
       <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
         {rating.toFixed(1)}
@@ -76,11 +75,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   // Use a placeholder if images array is empty
   const imageUrl = property.images && property.images.length > 0
     ? property.images[0]
-    : 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=800&q=80';
+    : "/no-image-available.jpeg";
 
-  // FIX: the real Property type is "APARTMENT" | "SHOP" (not "RESIDENTIAL" /
-  // "COMMERCIAL" as it was before) — this previously meant the apartment
-  // branch could never be reached and amenities/labels were always wrong.
   const isApartment = property.type === 'APARTMENT';
   const bedrooms = property.specifications.apartment?.bedrooms;
   const bathrooms = property.specifications.apartment?.bathrooms;
@@ -93,37 +89,51 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       : property.type;
 
   return (
-    <Link href={`/properties/${property._id}`} style={{ textDecoration: 'none' }}>
+    <Link href={`/properties/${property._id}`} style={{ textDecoration: 'none', height: '100%', display: 'block' }}>
       <Card
         sx={{
-          maxWidth: 345,
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
           bgcolor: 'background.paper',
           borderRadius: 2,
           position: 'relative',
-          transition: 'transform 0.2s, box-shadow 0.2s',
-          boxShadow: (theme) =>
-            theme.palette.mode === 'light'
-              ? '0 4px 12px rgba(15, 23, 42, 0.08)'
-              : '0 4px 12px rgba(0, 0, 0, 0.4)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          boxShadow: 1,
+          border: '1px solid',
+          borderColor: 'divider',
+          overflow: 'hidden',
           '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: (theme) =>
-              theme.palette.mode === 'light'
-                ? '0 12px 24px rgba(15, 23, 42, 0.15)'
-                : '0 12px 24px rgba(0, 0, 0, 0.6)',
+            transform: 'translateY(-6px)',
+            boxShadow: 6,
+            '& .property-image': {
+              transform: 'scale(1.08)',
+            }
           },
         }}
       >
-        <Box sx={{ position: 'relative' }}>
-          <Box sx={{ position: 'relative', height: 220, width: '100%' }}>
-            <Image
-              src={imageUrl}
-              alt={property.title}
-              fill
-              className="object-cover"
-              style={{ filter: 'brightness(0.95)' }}
-            />
-          </Box>
+        <Box sx={{ position: 'relative', height: 220, width: '100%', overflow: 'hidden' }}>
+          <Image
+            src={imageUrl}
+            alt={property.title}
+            fill
+            className="property-image object-cover"
+            style={{ transition: 'transform 0.5s ease', filter: 'brightness(0.95)' }}
+          />
+
+          {/* Bottom Gradient Overlay for better text readability */}
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: '50%',
+              background: 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)',
+              pointerEvents: 'none',
+              zIndex: 1,
+            }}
+          />
 
           {/* Featured Chip */}
           <Chip
@@ -140,6 +150,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               letterSpacing: 1,
               borderRadius: 1,
               height: 24,
+              zIndex: 2,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
             }}
           />
 
@@ -155,6 +167,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               alignItems: 'baseline',
               color: 'white',
               textShadow: '0px 2px 4px rgba(0,0,0,0.5)',
+              zIndex: 2,
             }}
           >
             <Typography variant="h5" component="span" sx={{ fontWeight: 'bold' }}>
@@ -171,63 +184,78 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               position: 'absolute',
               bottom: 12,
               right: 16,
-              border: '2px solid white',
+              border: '3px solid white',
               width: 40,
               height: 40,
               boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+              zIndex: 2,
+              bgcolor: 'primary.main',
             }}
             alt={property.ownerId.name}
-            src={`https://i.pravatar.cc/150?u=${property.ownerId._id}`} // Optional placeholder avatar
+            src="/user-default.jpg"
           >
             {property.ownerId.name.charAt(0)}
           </Avatar>
         </Box>
 
-        <CardContent sx={{ p: 2.5 }}>
-          <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 600, fontSize: '1.1rem', mb: 0.5 }}>
-            {property.title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <CardContent sx={{ p: 2.5, flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+            <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 700, fontSize: '1.1rem', lineHeight: 1.3, flex: 1 }}>
+              {property.title}
+            </Typography>
+            <Chip
+              label={typeLabel}
+              size="small"
+              variant="outlined"
+              sx={{
+                height: 24,
+                fontSize: '0.7rem',
+                borderColor: 'divider',
+                color: 'text.secondary',
+                fontWeight: 600,
+                flexShrink: 0,
+                ml: 1
+              }}
+            />
+          </Box>
+
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {property.description}
           </Typography>
 
-          {/* Amenities */}
-          <Box sx={{ display: 'flex', gap: 2, mb: 1.5, flexWrap: 'wrap' }}>
+          {/* Amenities as Premium Pills */}
+          <Box sx={{ display: 'flex', gap: 1, mb: 'auto', flexWrap: 'wrap' }}>
             {isApartment ? (
               <>
                 {bedrooms != null && (
-                  <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', gap: 0.5 }}>
-                    <BedIcon fontSize="small" sx={{ opacity: 0.7 }} />
-                    <Typography variant="body2">{bedrooms} غرف</Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: 'action.hover', px: 1.5, py: 0.5, borderRadius: 1, gap: 0.5, color: 'text.secondary' }}>
+                    <BedIcon fontSize="small" sx={{ fontSize: 18 }} />
+                    <Typography variant="body2" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>{bedrooms} غرف</Typography>
                   </Box>
                 )}
                 {bathrooms != null && (
-                  <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', gap: 0.5 }}>
-                    <BathtubIcon fontSize="small" sx={{ opacity: 0.7 }} />
-                    <Typography variant="body2">{bathrooms} حمام</Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: 'action.hover', px: 1.5, py: 0.5, borderRadius: 1, gap: 0.5, color: 'text.secondary' }}>
+                    <BathtubIcon fontSize="small" sx={{ fontSize: 18 }} />
+                    <Typography variant="body2" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>{bathrooms} حمام</Typography>
                   </Box>
                 )}
               </>
             ) : (
-              <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', gap: 0.5 }}>
-                <StorefrontIcon fontSize="small" sx={{ opacity: 0.7 }} />
-                <Typography variant="body2">
+              <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: 'action.hover', px: 1.5, py: 0.5, borderRadius: 1, gap: 0.5, color: 'text.secondary' }}>
+                <StorefrontIcon fontSize="small" sx={{ fontSize: 18 }} />
+                <Typography variant="body2" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                   {footTrafficTier ? `حركة عملاء: ${footTrafficTier}` : 'مساحة تجارية'}
                 </Typography>
               </Box>
             )}
 
-            <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', gap: 0.5 }}>
-              <SquareFootIcon fontSize="small" sx={{ opacity: 0.7 }} />
-              <Typography variant="body2">{property.squareFootage} م²</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: 'action.hover', px: 1.5, py: 0.5, borderRadius: 1, gap: 0.5, color: 'text.secondary' }}>
+              <SquareFootIcon fontSize="small" sx={{ fontSize: 18 }} />
+              <Typography variant="body2" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>{property.squareFootage} م²</Typography>
             </Box>
           </Box>
 
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textTransform: 'capitalize' }}>
-            {typeLabel}
-          </Typography>
-
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 2.5, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
             <PropertyRating propertyId={property._id} ownerId={property.ownerId._id} />
           </Box>
         </CardContent>
