@@ -7,12 +7,13 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '../../../hooks/useAuth';
 import { useNotifications } from '../../../hooks/useNotifications';
 import { Badge, Snackbar, Alert } from '@mui/material';
+import { ChatSocketProvider } from '../../../context/ChatSocketContext';
+import ChatNavBadge from '../../../components/chat/ChatNavBadge';
 
 // Icons
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import EventNoteIcon from '@mui/icons-material/EventNote';
-import DescriptionIcon from '@mui/icons-material/Description';
 import MessageIcon from '@mui/icons-material/Message';
 import InsightsIcon from '@mui/icons-material/Insights';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -22,7 +23,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 const drawerWidth = 260;
 
 export default function OwnerDashboardLayout({ children }: { children: React.ReactNode }) {
-  const { logout } = useAuth();
+  const { logout, isAuthenticated, user } = useAuth();
   const { unreadCount, toastOpen, toastMessage, handleCloseToast } = useNotifications();
   const pathname = usePathname();
   const theme = useTheme();
@@ -42,8 +43,7 @@ export default function OwnerDashboardLayout({ children }: { children: React.Rea
     ) },
     { title: 'العقارات', path: '/dashboard/owner/properties', icon: <HomeWorkIcon /> },
     { title: 'الحجوزات', path: '/dashboard/owner/bookings', icon: <EventNoteIcon /> },
-    { title: 'العقود', path: '/dashboard/owner/contracts', icon: <DescriptionIcon /> },
-    { title: 'الرسائل', path: '/dashboard/owner/messages', icon: <MessageIcon /> },
+    { title: 'الرسائل', path: '/dashboard/owner/messages', icon: <MessageIcon />, badge: true },
     { title: 'التحليلات', path: '/dashboard/owner/analytics', icon: <InsightsIcon /> },
   ];
 
@@ -78,6 +78,9 @@ export default function OwnerDashboardLayout({ children }: { children: React.Rea
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText primary={item.title} sx={{ typography: 'body1', fontWeight: isActive ? 'bold' : 'normal' }} />
+                {'badge' in item && item.badge && (
+                  <ChatNavBadge currentUserId={user?._id} />
+                )}
               </ListItemButton>
             </ListItem>
           );
@@ -98,7 +101,8 @@ export default function OwnerDashboardLayout({ children }: { children: React.Rea
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f8f9fa' }}>
+    <ChatSocketProvider enabled={isAuthenticated}>
+      <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f8f9fa' }}>
       {/* App Bar */}
       <AppBar
         position="fixed"
@@ -178,5 +182,6 @@ export default function OwnerDashboardLayout({ children }: { children: React.Rea
         </Alert>
       </Snackbar>
     </Box>
+    </ChatSocketProvider>
   );
 }

@@ -2,7 +2,7 @@
 
 import PropertyCard from "@/components/property/PropertyCard";
 import HeroSection from "@/components/home/HeroSection";
-import { propertyService } from "@/services/property";
+import { propertyServicenorhan } from "@/services/property";
 import { Property, PropertyFilters } from "@/types/property";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -13,13 +13,15 @@ import Typography from "@mui/material/Typography";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-const PropertyMap = dynamic(() => import("@/components/home/PropertyMap"), { ssr: false });
+const PropertyMap = dynamic(() => import("@/components/home/PropertyMap"), {
+  ssr: false,
+});
 
 export default function Home() {
   const [properties, setProperties] = useState<Property[]>([]);
-  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
+  const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
   const [filters, setFilters] = useState<PropertyFilters>({
-    type: '',
+    type: "",
     minPrice: undefined,
     maxPrice: undefined,
     minSize: undefined,
@@ -32,7 +34,7 @@ export default function Home() {
   });
 
   const fetchProperties = (currentFilters: PropertyFilters) => {
-    propertyService.fetchProperties(currentFilters).then((data) => {
+    propertyServicenorhan.fetchProperties(currentFilters).then((data) => {
       setProperties(data.properties);
     });
   };
@@ -112,7 +114,7 @@ export default function Home() {
           </ToggleButtonGroup>
         </Box>
 
-        {viewMode === 'map' ? (
+        {viewMode === "map" ? (
           <div className="flex flex-col lg:flex-row gap-8 items-start h-[calc(100vh-200px)] min-h-[600px]">
             <div className="w-full lg:w-1/2 h-full">
               <PropertyMap

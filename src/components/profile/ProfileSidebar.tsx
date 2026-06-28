@@ -17,7 +17,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { User } from '../../types/user';
 
-export type TabType = 'profile' | 'bookings' | 'contracts' | 'messages' | 'reviews' | 'settings';
+export type TabType = 'bookings' | 'messages' | 'settings';
 
 interface ProfileSidebarProps {
   user: User;

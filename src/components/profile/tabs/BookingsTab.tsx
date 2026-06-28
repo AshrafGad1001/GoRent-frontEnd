@@ -1,7 +1,8 @@
 "use client";
 
-import { Box, Typography, Skeleton, Alert } from "@mui/material";
+import { Box, Typography, Skeleton, Alert, IconButton, Tooltip } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { useBookings } from "../../../hooks/useBookings";
 import BookingCard from "../../Booking/BookingCard";
 
@@ -33,7 +34,7 @@ function BookingSkeleton() {
 }
 
 export default function BookingsTab() {
-    const { bookings, isLoading, error, cancelBooking } = useBookings();
+    const { bookings, isLoading, error, cancelBooking, fetchBookings } = useBookings();
 
     if (isLoading) {
         return (
