@@ -2,9 +2,7 @@
 
 import { Check, CheckCheck } from "lucide-react";
 import { ChatMessage } from "../../types/chat";
-import {
-  formatMessageTime,
-} from "../../lib/chatUtils";
+import { formatMessageTime } from "../../lib/chatUtils";
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;
@@ -40,12 +38,12 @@ export default function ChatMessageBubble({
         }`}
       >
         {!isOwn && senderName && (
-          <p className="mb-1 text-xs font-semibold text-primary">{senderName}</p>
+          <p className="mb-1 text-xs font-semibold text-primary">
+            {senderName}
+          </p>
         )}
 
-        <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-          {message.text}
-        </p>
+        <p className=" break-words leading-relaxed ">{message.text}</p>
 
         {message.attachmentUrl && (
           <a
