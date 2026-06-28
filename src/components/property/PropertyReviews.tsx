@@ -74,7 +74,7 @@ export default function PropertyReviews({ targetUserId, propertyId }: PropertyRe
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-        <CircularProgress size={32} sx={{ color: '#86c5da' }} />
+        <CircularProgress size={32} color="primary" />
       </Box>
     );
   }
@@ -90,12 +90,12 @@ export default function PropertyReviews({ targetUserId, propertyId }: PropertyRe
       {propertyId && <AddReviewForm propertyId={propertyId} onReviewAdded={triggerRefresh} />}
 
       {reviews.length === 0 ? (
-        <Box sx={{ p: 3, backgroundColor: '#f9fafb', borderRadius: 2, textAlign: 'center' }}>
+        <Box sx={{ p: 3, bgcolor: 'background.default', borderRadius: 2, textAlign: 'center' }}>
           <Typography color="text.secondary">لا توجد تقييمات حتى الآن</Typography>
         </Box>
       ) : (
         <>
-          <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold', mb: 3, color: '#1f2937' }}>
+          <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold', mb: 3, color: 'text.primary' }}>
             التقييمات ({reviews.length})
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -107,12 +107,12 @@ export default function PropertyReviews({ targetUserId, propertyId }: PropertyRe
               return (
                 <Box key={review._id}>
                   <Box sx={{ display: 'flex', gap: 2, mb: 1, alignItems: 'flex-start' }}>
-                    <Avatar sx={{ bgcolor: '#86c5da' }}>
+                    <Avatar sx={{ bgcolor: 'primary.main', color: 'primary.contrastText' }}>
                       {review.authorId.name.charAt(0).toUpperCase()}
                     </Avatar>
                     <Box sx={{ flex: 1 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography sx={{ fontWeight: 600, color: '#1f2937' }}>
+                        <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
                           {review.authorId.name}
                         </Typography>
 
@@ -125,7 +125,7 @@ export default function PropertyReviews({ targetUserId, propertyId }: PropertyRe
                                   size="small"
                                   onClick={() => setEditingId(isEditing ? null : review._id)}
                                   disabled={isDeleting}
-                                  sx={{ color: '#3b82f6', '&:hover': { bgcolor: '#eff6ff' } }}
+                                  sx={{ color: 'info.main', '&:hover': { bgcolor: 'info.light', color: 'info.dark' } }}
                                 >
                                   <EditIcon fontSize="small" />
                                 </IconButton>
@@ -139,7 +139,7 @@ export default function PropertyReviews({ targetUserId, propertyId }: PropertyRe
                                   size="small"
                                   onClick={() => handleDelete(review._id)}
                                   disabled={isDeleting || isEditing}
-                                  sx={{ color: '#ef4444', '&:hover': { bgcolor: '#fee2e2' } }}
+                                  sx={{ color: 'error.main', '&:hover': { bgcolor: 'error.light', color: 'error.dark' } }}
                                 >
                                   {isDeleting
                                     ? <CircularProgress size={16} color="inherit" />
@@ -162,12 +162,12 @@ export default function PropertyReviews({ targetUserId, propertyId }: PropertyRe
                       ) : (
                         <>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Rating value={review.rating} readOnly size="small" sx={{ color: '#fbc02d' }} />
+                            <Rating value={review.rating} readOnly size="small" />
                             <Typography variant="body2" color="text.secondary">
                               {new Date(review.createdAt).toLocaleDateString('ar-EG')}
                             </Typography>
                           </Box>
-                          <Typography variant="body2" sx={{ color: '#4b5563', mt: 1 }}>
+                          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
                             {review.comment}
                           </Typography>
                         </>

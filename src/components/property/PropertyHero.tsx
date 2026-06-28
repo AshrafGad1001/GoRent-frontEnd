@@ -1,9 +1,13 @@
 'use client';
+
 import React, { useState } from 'react';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { Property } from '@/types/property';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -22,11 +26,8 @@ export default function PropertyHero({ property }: PropertyHeroProps) {
 
   // Translate type to Arabic
   const propertyTypeMap: Record<string, string> = {
-    'RESIDENTIAL': 'سكني',
     'SHOP': 'تجاري',
     'APARTMENT': 'شقة',
-    'VILLA': 'فيلا',
-    'HOUSE': 'منزل',
   };
   const typeAr = propertyTypeMap[property.type] || property.type;
 
@@ -39,42 +40,95 @@ export default function PropertyHero({ property }: PropertyHeroProps) {
   };
 
   return (
-    <div className="w-full bg-zinc-50 pt-6">
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
+    <Box sx={{ width: '100%', bgcolor: 'background.default', pt: 6 }}>
+      <Box sx={{ maxWidth: 1152, mx: 'auto', px: { xs: 2, md: 3 } }}>
 
         {/* Header / Top Info */}
-        <div className="flex items-center justify-between mb-6">
-          <button
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+          <Button
+            startIcon={<ArrowForwardIcon />}
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-zinc-600 hover:text-zinc-900 transition-colors bg-white px-4 py-2 rounded-lg shadow-sm border border-zinc-200"
+            sx={{
+              bgcolor: 'background.paper',
+              color: 'text.primary',
+              borderColor: 'divider',
+              px: 2,
+              py: 1,
+              borderRadius: 1,
+              boxShadow: 1,
+              '&:hover': { bgcolor: 'background.paper', color: 'text.primary' }
+            }}
+            variant="outlined"
           >
-            <ArrowBackIcon sx={{ transform: 'scaleX(-1)' }} />
-            <span className="font-semibold">عودة</span>
-          </button>
-          <span className="bg-blue-100 text-blue-700 border border-blue-200 px-4 py-1.5 rounded-full text-sm font-bold tracking-wider">
+            عودة
+          </Button>
+          <Box
+            sx={{
+              bgcolor: 'info.light',
+              color: 'info.dark',
+              border: '1px solid',
+              borderColor: 'info.light',
+              px: 2,
+              py: 0.75,
+              borderRadius: '50px',
+              fontSize: '0.875rem',
+              fontWeight: 'bold',
+            }}
+          >
             {typeAr}
-          </span>
-        </div>
+          </Box>
+        </Box>
 
         {/* Title & Price Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-2">{property.title}</h1>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'flex-start', md: 'flex-end' }, justifyContent: 'space-between', gap: 2, mb: 4 }}>
+          <Box>
+            <Typography variant="h3" sx={{ color: 'text.primary', mb: 0.5, fontSize: { xs: '2rem', md: '2.5rem' } }}>
+              {property.title}
+            </Typography>
             {property.location?.coordinates?.length >= 2 && (
-              <p className="text-zinc-500 flex items-center gap-1 font-medium">
-                <LocationOnIcon fontSize="small" />
+              <Typography sx={{ color: 'text.secondary', display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 500 }}>
+                <LocationOnIcon sx={{ fontSize: 20 }} />
                 إحداثيات الموقع: {property.location.coordinates[0]}, {property.location.coordinates[1]}
-              </p>
+              </Typography>
             )}
-          </div>
-          <div className="bg-white border border-zinc-200 p-4 rounded-xl shadow-sm min-w-[200px] text-left rtl:text-right">
-            <p className="text-zinc-500 text-sm mb-1 uppercase font-semibold">الإيجار الشهري</p>
-            <p className="text-3xl font-bold text-blue-600">{property.pricePerMonth.toLocaleString()} <span className="text-xl text-zinc-500 font-medium">ج.م</span></p>
-          </div>
-        </div>
+          </Box>
+          <Box
+            sx={{
+              bgcolor: 'background.paper',
+              border: '1px solid',
+              borderColor: 'divider',
+              p: 2,
+              borderRadius: 2,
+              boxShadow: 1,
+              minWidth: 200,
+              textAlign: 'start',
+            }}
+          >
+            <Typography sx={{ color: 'text.secondary', fontSize: '0.875rem', mb: 0.5, textTransform: 'uppercase', fontWeight: 600 }}>
+              الإيجار الشهري
+            </Typography>
+            <Typography sx={{ color: 'info.main', fontSize: '1.875rem', fontWeight: 'bold' }}>
+              {property.pricePerMonth.toLocaleString()}{' '}
+              <Typography component="span" sx={{ fontSize: '1.25rem', color: 'text.secondary', fontWeight: 500 }}>
+                ج.م
+              </Typography>
+            </Typography>
+          </Box>
+        </Box>
 
         {/* Main Image Carousel */}
-        <div className="relative w-full aspect-[4/3] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-lg bg-zinc-200 group">
+        <Box
+          className="group"
+          sx={{
+            position: 'relative',
+            width: '100%',
+            aspectRatio: { xs: '4/3', md: '21/9' },
+            borderRadius: 3,
+            overflow: 'hidden',
+            boxShadow: 8,
+            bgcolor: 'background.default',
+          }}
+        >
           <Image
             src={images[currentIndex]}
             alt={`${property.title} - Image ${currentIndex + 1}`}
@@ -86,62 +140,127 @@ export default function PropertyHero({ property }: PropertyHeroProps) {
           {/* Navigation Arrows */}
           {images.length > 1 && (
             <>
-              {/* Left Arrow */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  prevImage();
-                }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-zinc-800 p-3 rounded-full shadow-lg backdrop-blur-sm transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
-              >
-                <ArrowBackIosNewIcon fontSize="small" />
-              </button>
-
-              {/* Right Arrow */}
-              <button
+              {/* Left Arrow (Visually Next in RTL) */}
+              <Box
                 onClick={(e) => {
                   e.stopPropagation();
                   nextImage();
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-zinc-800 p-3 rounded-full shadow-lg backdrop-blur-sm transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
+                sx={{
+                  position: 'absolute',
+                  left: 16,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  bgcolor: 'rgba(255, 255, 255, 0.9)',
+                  color: 'text.primary',
+                  p: 1.5,
+                  borderRadius: '50%',
+                  boxShadow: 4,
+                  backdropFilter: 'blur(4px)',
+                  opacity: { xs: 1, md: 0 },
+                  transition: 'opacity 0.2s',
+                  cursor: 'pointer',
+                  '.group:hover &': { opacity: 1 },
+                  '&:hover': { bgcolor: '#ffffff' },
+                  zIndex: 10,
+                }}
               >
-                <ArrowForwardIosIcon fontSize="small" />
-              </button>
+                <ArrowForwardIosIcon sx={{ fontSize: 20 }} />
+              </Box>
+
+              {/* Right Arrow (Visually Prev in RTL) */}
+              <Box
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevImage();
+                }}
+                sx={{
+                  position: 'absolute',
+                  right: 16,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  bgcolor: 'rgba(255, 255, 255, 0.9)',
+                  color: 'text.primary',
+                  p: 1.5,
+                  borderRadius: '50%',
+                  boxShadow: 4,
+                  backdropFilter: 'blur(4px)',
+                  opacity: { xs: 1, md: 0 },
+                  transition: 'opacity 0.2s',
+                  cursor: 'pointer',
+                  '.group:hover &': { opacity: 1 },
+                  '&:hover': { bgcolor: '#ffffff' },
+                  zIndex: 10,
+                }}
+              >
+                <ArrowBackIosNewIcon sx={{ fontSize: 20 }} />
+              </Box>
 
               {/* Dots */}
-              <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+              <Box sx={{ position: 'absolute', bottom: 24, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 1, zIndex: 10 }}>
                 {images.map((_, idx) => (
-                  <button
+                  <Box
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
-                    className={`h-2.5 rounded-full transition-all shadow-md ${idx === currentIndex ? 'bg-pink-400 w-8' : 'bg-zinc-400/80 hover:bg-white w-2.5'
-                      }`}
+                    sx={{
+                      height: 10,
+                      borderRadius: '50px',
+                      transition: 'all 0.3s',
+                      boxShadow: 2,
+                      cursor: 'pointer',
+                      width: idx === currentIndex ? 32 : 10,
+                      bgcolor: idx === currentIndex ? 'secondary.main' : 'rgba(161, 161, 170, 0.8)',
+                      '&:hover': { bgcolor: idx === currentIndex ? 'secondary.main' : '#ffffff' },
+                    }}
                   />
                 ))}
-              </div>
+              </Box>
             </>
           )}
-        </div>
+        </Box>
 
         {/* Thumbnails below */}
         {images.length > 1 && (
-          <div className="flex gap-4 mt-6 overflow-x-auto pb-4 scrollbar-hide">
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2,
+              mt: 3,
+              overflowX: 'auto',
+              pb: 2,
+              scrollbarWidth: 'none',
+              '&::-webkitScrollbar': { display: 'none' },
+            }}
+          >
             {images.map((img, idx) => (
-              <button
+              <Box
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`relative w-28 h-28 flex-shrink-0 rounded-2xl overflow-hidden transition-all ${idx === currentIndex
-                    ? 'ring-4 ring-pink-300 ring-offset-2 opacity-100'
-                    : 'opacity-70 hover:opacity-100 border border-zinc-300'
-                  }`}
+                sx={{
+                  position: 'relative',
+                  width: 112,
+                  height: 112,
+                  flexShrink: 0,
+                  borderRadius: 2,
+                  overflow: 'hidden',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                  opacity: idx === currentIndex ? 1 : 0.7,
+                  outline: idx === currentIndex ? '3px solid' : 'none',
+                  outlineColor: 'secondary.light',
+                  outlineOffset: 2,
+                  border: idx === currentIndex ? 'none' : '1px solid',
+                  borderColor: 'divider',
+                  '&:hover': { opacity: 1 },
+                }}
               >
                 <Image src={img} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
-              </button>
+              </Box>
             ))}
-          </div>
+          </Box>
         )}
 
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
