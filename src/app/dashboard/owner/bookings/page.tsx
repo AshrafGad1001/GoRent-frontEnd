@@ -111,7 +111,7 @@ export default function OwnerBookingsPage() {
           bgcolor: 'white',
         }}
       >
-        <Stack direction="row" spacing={2} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <Stack direction="row" spacing={2} sx={{ alignitems: 'center', flexWrap: 'wrap' }}>
           <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
             تصفية حسب:
           </Typography>
@@ -229,7 +229,7 @@ export default function OwnerBookingsPage() {
                   >
                     {/* Tenant */}
                     <TableCell>
-                      <Stack direction="row" spacing={1.5} alignItems="center">
+                      <Stack direction="row" spacing={1.5} alignitems="center">
                         <Avatar sx={{ width: 34, height: 34, bgcolor: 'primary.50', color: 'primary.main', fontSize: 14 }}>
                           {booking.tenantId?.name?.[0]?.toUpperCase() || <PersonIcon sx={{ fontSize: 18 }} />}
                         </Avatar>
@@ -246,7 +246,7 @@ export default function OwnerBookingsPage() {
 
                     {/* Property */}
                     <TableCell>
-                      <Stack direction="row" spacing={1} alignItems="center">
+                      <Stack direction="row" spacing={1} alignitems="center">
                         <HomeWorkIcon sx={{ fontSize: 16, color: 'text.disabled' }} />
                         <Typography variant="body2" noWrap sx={{ maxWidth: 180 }}>
                           {booking.propertyId?.title || '—'}

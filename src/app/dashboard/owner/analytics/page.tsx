@@ -56,7 +56,7 @@ function KpiCard({ icon, label, value, sub, color, bgColor }: KpiCardProps) {
           borderRadius: 2.5,
           bgcolor: bgColor,
           display: 'flex',
-          alignItems: 'center',
+          alignitems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
           color,
@@ -102,7 +102,7 @@ function TrendChart({ data }: { data: MonthlyTrendItem[] }) {
           <Typography color="text.disabled">لا توجد بيانات بعد</Typography>
         </Box>
       ) : (
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1.5, height: 200 }}>
+        <Box sx={{ display: 'flex', alignitems: 'flex-end', gap: 1.5, height: 200 }}>
           {data.map((item, idx) => {
             const totalH = Math.round((item.total / max) * 160);
             const reservedH = Math.round((item.reserved / max) * 160);
@@ -124,7 +124,7 @@ function TrendChart({ data }: { data: MonthlyTrendItem[] }) {
                     flex: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
+                    alignitems: 'center',
                     gap: 0.5,
                     cursor: 'default',
                   }}
@@ -185,11 +185,11 @@ function TrendChart({ data }: { data: MonthlyTrendItem[] }) {
 
       {/* Legend */}
       <Stack direction="row" spacing={3} sx={{ mt: 2 }}>
-        <Stack direction="row" spacing={0.7} alignItems="center">
+        <Stack direction="row" spacing={0.7} alignitems="center">
           <Box sx={{ width: 12, height: 12, borderRadius: 0.5, bgcolor: '#1976d2' }} />
           <Typography variant="caption" color="text.secondary">محجوز</Typography>
         </Stack>
-        <Stack direction="row" spacing={0.7} alignItems="center">
+        <Stack direction="row" spacing={0.7} alignitems="center">
           <Box sx={{ width: 12, height: 12, borderRadius: 0.5, bgcolor: '#e3f2fd' }} />
           <Typography variant="caption" color="text.secondary">إجمالي</Typography>
         </Stack>
@@ -239,8 +239,8 @@ function StatusBreakdown({ breakdown, total }: StatusBreakdownProps) {
           const cfg = STATUS_LABELS[status];
           return (
             <Box key={status}>
-              <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-                <Stack direction="row" spacing={1} alignItems="center">
+              <Stack direction="row" sx={{ justifyContent: 'space-between', alignitems: 'center', mb: 0.5 }}>
+                <Stack direction="row" spacing={1} alignitems="center">
                   <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: cfg.color }} />
                   <Typography variant="body2">{cfg.label}</Typography>
                 </Stack>
@@ -273,7 +273,7 @@ function PropertyTable({ data }: { data: PerPropertyStat[] }) {
       elevation={0}
       sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', bgcolor: 'white' }}
     >
-      <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 2.5 }}>
+      <Stack direction="row" alignitems="center" spacing={1.5} sx={{ mb: 2.5 }}>
         <HomeWorkIcon color="primary" />
         <Typography variant="h6" fontWeight="bold">تحليل العقارات</Typography>
       </Stack>
@@ -377,7 +377,7 @@ export default function OwnerAnalyticsPage() {
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignitems: 'center', minHeight: '60vh' }}>
         <CircularProgress size={48} />
       </Box>
     );
@@ -386,7 +386,7 @@ export default function OwnerAnalyticsPage() {
   return (
     <Box dir="rtl" sx={{ maxWidth: 1100, mx: 'auto' }}>
       {/* Header */}
-      <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 4 }}>
+      <Stack direction="row" alignitems="center" spacing={2} sx={{ mb: 4 }}>
         <Box
           sx={{
             width: 48,
@@ -394,7 +394,7 @@ export default function OwnerAnalyticsPage() {
             borderRadius: 2.5,
             bgcolor: 'primary.50',
             display: 'flex',
-            alignItems: 'center',
+            alignitems: 'center',
             justifyContent: 'center',
             color: 'primary.main',
           }}
