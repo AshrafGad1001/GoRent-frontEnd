@@ -18,15 +18,18 @@ const ColorModeContext = createContext<ColorModeContextType>({
 const STORAGE_KEY = 'gorent-color-mode';
 
 export function ColorModeProvider({ children }: { children: React.ReactNode }) {
-    const [mode, setModeState] = useState<PaletteMode>(() => {
-        const saved = typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_KEY) as PaletteMode | null : null;
+    // Always start with 'light' — matches the server render, avoiding hydration mismatches.
+    // We sync to the real preference (localStorage / prefers-color-scheme) after mount.
+    const [mode, setModeState] = useState<PaletteMode>('light');
+
+    useEffect(() => {
+        const saved = window.localStorage.getItem(STORAGE_KEY) as PaletteMode | null;
         if (saved === 'light' || saved === 'dark') {
-            return saved;
-        } else if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
+            setModeState(saved);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setModeState('dark');
         }
-        return 'light';
-    });
+    }, []);
 
     const setMode = (newMode: PaletteMode) => {
         setModeState(newMode);
@@ -44,4 +47,4 @@ export function ColorModeProvider({ children }: { children: React.ReactNode }) {
 
 export function useColorMode() {
     return useContext(ColorModeContext);
-}
+}

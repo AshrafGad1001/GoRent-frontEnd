@@ -48,6 +48,7 @@ export default function PropertyListItem({
           src={imageSrc}
           alt={property.title}
           fill
+          sizes="96px"
           className="object-cover"
           unoptimized={
             imageSrc.startsWith("data:") ||

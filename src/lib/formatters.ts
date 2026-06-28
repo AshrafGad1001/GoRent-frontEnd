@@ -1,4 +1,5 @@
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number | null | undefined): string {
+  if (amount == null) return `0 ر.س`;
   return `${amount.toLocaleString("ar-SA")} ر.س`;
 }
 

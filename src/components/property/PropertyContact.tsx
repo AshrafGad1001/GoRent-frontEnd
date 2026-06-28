@@ -62,6 +62,7 @@ export default function PropertyContact({ property }: PropertyContactProps) {
               src={ownerAvatar || '/user-default.jpg'}
               alt={owner.name}
               fill
+              sizes="64px"
               className="object-cover"
             />
           </Box>
