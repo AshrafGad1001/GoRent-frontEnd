@@ -37,45 +37,28 @@
 //     },
 // };
 import { fetchApi } from "./auth";
-import { Booking, CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
+import {
+  Booking,
+  CreateBookingRequest,
+  CreateBookingResponse,
+  OwnerBookingsResponse,
+  OwnerAnalytics,
+} from "../types/booking";
 
 interface GetTenantBookingsResponse {
-    bookings: Booking[];
+  bookings: Booking[];
 }
 
 export const bookingService = {
-    getTenantBookings: async (): Promise<GetTenantBookingsResponse> => {
-        return fetchApi<GetTenantBookingsResponse>("/api/bookings/tenant");
-    },
-
-    cancelBooking: async (id: string) => {
-        return fetchApi(`/api/bookings/${id}/cancel`, {
-            method: "PATCH",
-        });
-    },
-
-    createBooking: async (payload: CreateBookingRequest): Promise<CreateBookingResponse> => {
-        return fetchApi<CreateBookingResponse>("/api/bookings", {
-            method: "POST",
-            body: JSON.stringify(payload),
-        });
-    },
-};
-import { fetchApi } from "./auth";
-import { CreateBookingRequest, CreateBookingResponse, OwnerBookingsResponse, OwnerAnalytics } from "@/types/booking";
-
-export const bookingService = {
   // Tenant actions
-  getTenantBookings: async () => {
-    return fetchApi("/api/bookings/tenant");
+  getTenantBookings: async (): Promise<GetTenantBookingsResponse> => {
+    return fetchApi<GetTenantBookingsResponse>("/api/bookings/tenant");
   },
-
   cancelBooking: async (id: string) => {
     return fetchApi(`/api/bookings/${id}/cancel`, {
       method: "PATCH",
     });
   },
-
   createBooking: async (payload: CreateBookingRequest): Promise<CreateBookingResponse> => {
     return fetchApi<CreateBookingResponse>("/api/bookings", {
       method: "POST",
@@ -91,19 +74,16 @@ export const bookingService = {
     const query = params.toString();
     return fetchApi<OwnerBookingsResponse>(`/api/bookings/owner${query ? `?${query}` : ""}`);
   },
-
   acceptBooking: async (id: string): Promise<{ message: string }> => {
     return fetchApi<{ message: string }>(`/api/bookings/${id}/accept`, {
       method: "PATCH",
     });
   },
-
   rejectBooking: async (id: string): Promise<{ message: string }> => {
     return fetchApi<{ message: string }>(`/api/bookings/${id}/reject`, {
       method: "PATCH",
     });
   },
-
   getOwnerAnalytics: async (): Promise<OwnerAnalytics> => {
     return fetchApi<OwnerAnalytics>("/api/bookings/owner/analytics");
   },
