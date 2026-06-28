@@ -38,6 +38,7 @@ const sectionSx = {
     p: 3, borderRadius: 3,
     boxShadow: "0px 2px 8px rgba(0,0,0,0.06)",
     border: "1px solid", borderColor: "divider",
+    bgcolor: "background.paper",
 };
 
 export default function SettingsTab({ user, onUpdate }: SettingsTabProps) {
@@ -72,7 +73,7 @@ export default function SettingsTab({ user, onUpdate }: SettingsTabProps) {
                         </Avatar>
                         <Box onClick={() => fileInputRef.current?.click()}
                             sx={{ position: "absolute", bottom: 0, right: 0, bgcolor: "primary.main", borderRadius: "50%", p: 0.5, cursor: "pointer", display: "flex" }}>
-                            <CameraAltIcon sx={{ fontSize: 16, color: "#fff" }} />
+                            <CameraAltIcon sx={{ fontSize: 16, color: "primary.contrastText" }} />
                         </Box>
                     </Box>
                     <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleImageUpload} />

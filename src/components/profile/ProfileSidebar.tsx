@@ -29,7 +29,6 @@ interface ProfileSidebarProps {
 export default function ProfileSidebar({ user, activeTab, onTabChange, onLogout }: ProfileSidebarProps) {
   const menuItems = [
     { id: 'bookings', label: 'حجوزاتي', icon: <EventAvailableIcon /> },
-    { id: 'contracts', label: 'عقودي', icon: <DescriptionOutlinedIcon /> },
     { id: 'messages', label: 'الرسائل', icon: <ChatBubbleOutlinedIcon /> },
     { id: 'reviews', label: 'التقييمات', icon: <StarOutlinedIcon /> },
     { id: 'settings', label: 'الإعدادات', icon: <SettingsOutlinedIcon /> },
@@ -106,12 +105,12 @@ export default function ProfileSidebar({ user, activeTab, onTabChange, onLogout 
                 borderRadius: 2,
                 flexShrink: 0,
                 bgcolor: isActive ? 'primary.main' : 'transparent',
-                color: isActive ? '#fff' : 'text.primary',
+                color: isActive ? 'primary.contrastText' : 'text.primary',
                 transition: 'all 0.2s ease',
                 '&:hover': { bgcolor: isActive ? 'primary.dark' : 'action.hover' },
               }}
             >
-              <Box sx={{ color: isActive ? '#fff' : 'text.secondary', display: 'flex', '& svg': { fontSize: { xs: '18px', md: '22px' } } }}>
+              <Box sx={{ color: isActive ? 'primary.contrastText' : 'text.secondary', display: 'flex', '& svg': { fontSize: { xs: '18px', md: '22px' } } }}>
                 {item.icon}
               </Box>
               <Typography variant="body2" sx={{ fontWeight: isActive ? 700 : 500, fontSize: { xs: '0.7rem', md: '0.875rem' } }}>
