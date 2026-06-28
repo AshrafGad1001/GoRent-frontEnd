@@ -21,13 +21,13 @@ import {
 } from "@mui/material";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import HomeIcon from "@mui/icons-material/Home";
-
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import CancelIcon from "@mui/icons-material/Cancel";
 import MessageIcon from "@mui/icons-material/Message";
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import CheckIcon from "@mui/icons-material/Check";
+import { alpha } from "@mui/material/styles";
 import { INotification } from "../../types/notification";
 import { notificationService } from "../../services/notificationService";
 import { io, Socket } from "socket.io-client";
@@ -37,7 +37,7 @@ const getNotificationIcon = (type: string, isRead: boolean) => {
   switch (type) {
     case "VIEWING_REQUEST":
     case "VIEWING_ACCEPTED":
-      return <HomeIcon color={isRead ? "primary" : "inherit"} />;
+      return <HomeIcon color={isRead ? "action" : "inherit"} />;
     case "BOOKING_REQUEST":
       return <AttachMoneyIcon color={isRead ? "success" : "inherit"} />;
     case "NEW_REVIEW":
@@ -58,21 +58,21 @@ const getNotificationIcon = (type: string, isRead: boolean) => {
 const getNotificationMessage = (type: string) => {
   switch (type) {
     case "VIEWING_REQUEST":
-      return "لديك طلب مشاهدة جديد لعقارك 🏠";
+      return "لديك طلب مشاهدة جديد لعقارك";
     case "VIEWING_ACCEPTED":
-      return "تمت الموافقة على طلب المشاهدة الخاص بك ✅";
+      return "تمت الموافقة على طلب المشاهدة الخاص بك";
     case "BOOKING_REQUEST":
-      return "هناك طلب حجز جديد لعقارك 💰";
+      return "هناك طلب حجز جديد لعقارك";
     case "NEW_REVIEW":
-      return "قام شخص بإضافة تقييم جديد ⭐";
+      return "قام شخص بإضافة تقييم جديد";
     case "LISTING_APPROVED":
-      return "تمت الموافقة على نشر عقارك بنجاح 🎉";
+      return "تمت الموافقة على نشر عقارك بنجاح";
     case "LISTING_REJECTED":
-      return "نأسف، تم رفض نشر عقارك ❌";
+      return "نأسف، تم رفض نشر عقارك";
     case "NEW_MESSAGE":
-      return "لديك رسالة جديدة 💬";
+      return "لديك رسالة جديدة";
     case "NEW_LISTING_PENDING":
-      return "هناك عقار جديد بانتظار المراجعة (للآدمن) ⚙️";
+      return "هناك عقار جديد بانتظار المراجعة (للآدمن)";
     default:
       return "لديك إشعار جديد";
   }
@@ -203,7 +203,7 @@ export default function NotificationList() {
             py: 10,
             textAlign: "center",
             bgcolor: "background.default",
-            borderRadius: 4,
+            borderRadius: 2,
             border: "1px dashed",
             borderColor: "divider",
           }}
@@ -214,7 +214,7 @@ export default function NotificationList() {
           </Typography>
         </Paper>
       ) : (
-        <Card elevation={0} sx={{ borderRadius: 4, overflow: "hidden", border: "1px solid", borderColor: "divider" }}>
+        <Card elevation={0} sx={{ borderRadius: 2, overflow: "hidden", border: "1px solid", borderColor: "divider" }}>
           <List disablePadding>
             {notifications.map((notif, index) => (
               <Fade in={true} key={notif._id} timeout={500 + index * 100}>
@@ -224,10 +224,14 @@ export default function NotificationList() {
                     sx={{
                       py: 2.5,
                       px: 3,
-                      bgcolor: notif.isRead ? "transparent" : "primary.50",
+                      bgcolor: notif.isRead 
+                        ? "transparent" 
+                        : (theme) => alpha(theme.palette.primary.main, 0.08),
                       transition: "background-color 0.3s ease",
                       "&:hover": {
-                        bgcolor: notif.isRead ? "action.hover" : "primary.100",
+                        bgcolor: notif.isRead 
+                          ? "action.hover" 
+                          : (theme) => alpha(theme.palette.primary.main, 0.15),
                       },
                       cursor: notif.isRead ? "default" : "pointer",
                     }}
@@ -236,8 +240,8 @@ export default function NotificationList() {
                     <ListItemAvatar sx={{ minWidth: 56 }}>
                       <Avatar
                         sx={{
-                          bgcolor: notif.isRead ? "grey.200" : "primary.main",
-                          color: notif.isRead ? "text.secondary" : "white",
+                          bgcolor: notif.isRead ? "background.default" : "primary.main",
+                          color: notif.isRead ? "text.secondary" : "primary.contrastText",
                         }}
                       >
                         {getNotificationIcon(notif.type, notif.isRead)}
@@ -279,7 +283,10 @@ export default function NotificationList() {
                           }}
                           color="primary"
                           title="تحديد كمقروء"
-                          sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'grey.100' } }}
+                          sx={{ 
+                            bgcolor: 'background.paper', 
+                            '&:hover': { bgcolor: 'action.hover' } 
+                          }}
                         >
                           <CheckIcon />
                         </IconButton>

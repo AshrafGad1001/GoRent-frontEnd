@@ -52,5 +52,5 @@ export function useBookings() {
         };
     }, []);
 
-    return { bookings, isLoading, error, cancelBooking };
+    return { bookings, isLoading, error, cancelBooking, fetchBookings };
 }

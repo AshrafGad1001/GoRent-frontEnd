@@ -1,9 +1,14 @@
 'use client';
+
 import React, { useState } from 'react';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import { alpha } from '@mui/material/styles';
 import { Property } from '@/types/property';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -16,17 +21,17 @@ export default function PropertyHero({ property }: PropertyHeroProps) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const images = property.images && property.images.length > 0
+  // FIX: previously fell back to a plain string when there were no images,
+  // which broke `images.length` and `images[currentIndex]` (string indexing
+  // instead of array indexing). Now always an array, same intent.
+  const images: string[] = property.images && property.images.length > 0
     ? property.images
-    : ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=2000&q=80'];
+    : ["/no-image-available.jpeg"];
 
   // Translate type to Arabic
   const propertyTypeMap: Record<string, string> = {
-    'RESIDENTIAL': 'سكني',
     'SHOP': 'تجاري',
     'APARTMENT': 'شقة',
-    'VILLA': 'فيلا',
-    'HOUSE': 'منزل',
   };
   const typeAr = propertyTypeMap[property.type] || property.type;
 
@@ -39,42 +44,141 @@ export default function PropertyHero({ property }: PropertyHeroProps) {
   };
 
   return (
-    <div className="w-full bg-zinc-50 pt-6">
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
+    <Box
+      sx={{
+        width: '100%',
+        bgcolor: 'background.default',
+        pt: 6,
+        '@keyframes fadeInUp': {
+          from: { opacity: 0, transform: 'translateY(16px)' },
+          to: { opacity: 1, transform: 'translateY(0)' },
+        },
+      }}
+    >
+      <Box sx={{ maxWidth: 1152, mx: 'auto', px: { xs: 2, md: 3 } }}>
 
         {/* Header / Top Info */}
-        <div className="flex items-center justify-between mb-6">
-          <button
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+          <Button
+            startIcon={<ArrowForwardIcon />}
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-zinc-600 hover:text-zinc-900 transition-colors bg-white px-4 py-2 rounded-lg shadow-sm border border-zinc-200"
+            sx={{
+              bgcolor: 'background.paper',
+              color: 'text.primary',
+              borderColor: 'divider',
+              px: 2,
+              py: 1,
+              borderRadius: 50,
+              boxShadow: 1,
+              fontWeight: 600,
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+              '&:hover': {
+                bgcolor: 'background.paper',
+                color: 'text.primary',
+                boxShadow: 3,
+                transform: 'translateX(2px)',
+              },
+            }}
+            variant="outlined"
           >
-            <ArrowBackIcon sx={{ transform: 'scaleX(-1)' }} />
-            <span className="font-semibold">عودة</span>
-          </button>
-          <span className="bg-blue-100 text-blue-700 border border-blue-200 px-4 py-1.5 rounded-full text-sm font-bold tracking-wider">
+            عودة
+          </Button>
+          <Box
+            sx={{
+              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12),
+              color: 'primary.main',
+              border: '1px solid',
+              borderColor: (theme) => alpha(theme.palette.primary.main, 0.3),
+              px: 2.5,
+              py: 0.85,
+              borderRadius: 50,
+              fontSize: '0.875rem',
+              fontWeight: 700,
+              letterSpacing: 0.3,
+            }}
+          >
             {typeAr}
-          </span>
-        </div>
+          </Box>
+        </Box>
 
         {/* Title & Price Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-2">{property.title}</h1>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            alignItems: { xs: 'flex-start', md: 'flex-end' },
+            justifyContent: 'space-between',
+            gap: 2,
+            mb: 4,
+            animation: 'fadeInUp 0.5s ease-out both',
+          }}
+        >
+          <Box>
+            <Typography
+              variant="h3"
+              sx={{
+                color: 'text.primary',
+                mb: 0.75,
+                fontWeight: 800,
+                fontSize: { xs: '2rem', md: '2.75rem' },
+                letterSpacing: '-0.5px',
+              }}
+            >
+              {property.title}
+            </Typography>
             {property.location?.coordinates?.length >= 2 && (
-              <p className="text-zinc-500 flex items-center gap-1 font-medium">
-                <LocationOnIcon fontSize="small" />
+              <Typography sx={{ color: 'text.secondary', display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 500 }}>
+                <LocationOnIcon sx={{ fontSize: 20, color: 'primary.main' }} />
                 إحداثيات الموقع: {property.location.coordinates[0]}, {property.location.coordinates[1]}
-              </p>
+              </Typography>
             )}
-          </div>
-          <div className="bg-white border border-zinc-200 p-4 rounded-xl shadow-sm min-w-[200px] text-left rtl:text-right">
-            <p className="text-zinc-500 text-sm mb-1 uppercase font-semibold">الإيجار الشهري</p>
-            <p className="text-3xl font-bold text-blue-600">{property.pricePerMonth.toLocaleString()} <span className="text-xl text-zinc-500 font-medium">ج.م</span></p>
-          </div>
-        </div>
+          </Box>
+          <Box
+            sx={{
+              bgcolor: 'background.paper',
+              border: '1px solid',
+              borderColor: 'divider',
+              borderInlineStart: '4px solid',
+              borderInlineStartColor: 'primary.main',
+              p: 2.25,
+              borderRadius: 3,
+              boxShadow: (theme) =>
+                theme.palette.mode === 'light'
+                  ? '0 8px 24px rgba(15, 23, 42, 0.1)'
+                  : '0 8px 24px rgba(0, 0, 0, 0.5)',
+              minWidth: 220,
+              textAlign: 'start',
+            }}
+          >
+            <Typography sx={{ color: 'text.secondary', fontSize: '0.8rem', mb: 0.5, textTransform: 'uppercase', fontWeight: 700, letterSpacing: 0.5 }}>
+              الإيجار الشهري
+            </Typography>
+            <Typography sx={{ color: 'primary.main', fontSize: '2rem', fontWeight: 800, lineHeight: 1.1 }}>
+              {property.pricePerMonth.toLocaleString()}{' '}
+              <Typography component="span" sx={{ fontSize: '1.1rem', color: 'text.secondary', fontWeight: 600 }}>
+                ج.م
+              </Typography>
+            </Typography>
+          </Box>
+        </Box>
 
         {/* Main Image Carousel */}
-        <div className="relative w-full aspect-[4/3] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-lg bg-zinc-200 group">
+        <Box
+          className="group"
+          sx={{
+            position: 'relative',
+            width: '100%',
+            aspectRatio: { xs: '4/3', md: '21/9' },
+            borderRadius: 4,
+            overflow: 'hidden',
+            boxShadow: (theme) =>
+              theme.palette.mode === 'light'
+                ? '0 20px 50px rgba(15, 23, 42, 0.18)'
+                : '0 20px 50px rgba(0, 0, 0, 0.6)',
+            bgcolor: 'background.default',
+            animation: 'fadeInUp 0.6s ease-out both',
+          }}
+        >
           <Image
             src={images[currentIndex]}
             alt={`${property.title} - Image ${currentIndex + 1}`}
@@ -83,65 +187,162 @@ export default function PropertyHero({ property }: PropertyHeroProps) {
             priority
           />
 
+          {/* Bottom gradient for depth + legibility of the counter badge */}
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.45) 100%)',
+              pointerEvents: 'none',
+            }}
+          />
+
+          {/* Image counter */}
+          {images.length > 1 && (
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 20,
+                insetInlineStart: 20,
+                bgcolor: 'rgba(0,0,0,0.55)',
+                color: 'white',
+                px: 1.5,
+                py: 0.5,
+                borderRadius: 50,
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                backdropFilter: 'blur(6px)',
+                zIndex: 10,
+              }}
+            >
+              {currentIndex + 1} / {images.length}
+            </Box>
+          )}
+
           {/* Navigation Arrows */}
           {images.length > 1 && (
             <>
-              {/* Left Arrow */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  prevImage();
-                }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-zinc-800 p-3 rounded-full shadow-lg backdrop-blur-sm transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
-              >
-                <ArrowBackIosNewIcon fontSize="small" />
-              </button>
-
-              {/* Right Arrow */}
-              <button
+              {/* Left Arrow (Visually Next in RTL) */}
+              <Box
                 onClick={(e) => {
                   e.stopPropagation();
                   nextImage();
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-zinc-800 p-3 rounded-full shadow-lg backdrop-blur-sm transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
+                sx={{
+                  position: 'absolute',
+                  left: 16,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  bgcolor: (theme) => alpha(theme.palette.background.paper, 0.9),
+                  color: 'text.primary',
+                  p: 1.5,
+                  borderRadius: '50%',
+                  boxShadow: 4,
+                  backdropFilter: 'blur(4px)',
+                  opacity: { xs: 1, md: 0 },
+                  transition: 'opacity 0.2s, transform 0.15s',
+                  cursor: 'pointer',
+                  '.group:hover &': { opacity: 1 },
+                  '&:hover': { bgcolor: 'background.paper', transform: 'translateY(-50%) scale(1.08)' },
+                  zIndex: 10,
+                }}
               >
-                <ArrowForwardIosIcon fontSize="small" />
-              </button>
+                <ArrowForwardIosIcon sx={{ fontSize: 20 }} />
+              </Box>
+
+              {/* Right Arrow (Visually Prev in RTL) */}
+              <Box
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevImage();
+                }}
+                sx={{
+                  position: 'absolute',
+                  right: 16,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  bgcolor: (theme) => alpha(theme.palette.background.paper, 0.9),
+                  color: 'text.primary',
+                  p: 1.5,
+                  borderRadius: '50%',
+                  boxShadow: 4,
+                  backdropFilter: 'blur(4px)',
+                  opacity: { xs: 1, md: 0 },
+                  transition: 'opacity 0.2s, transform 0.15s',
+                  cursor: 'pointer',
+                  '.group:hover &': { opacity: 1 },
+                  '&:hover': { bgcolor: 'background.paper', transform: 'translateY(-50%) scale(1.08)' },
+                  zIndex: 10,
+                }}
+              >
+                <ArrowBackIosNewIcon sx={{ fontSize: 20 }} />
+              </Box>
 
               {/* Dots */}
-              <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+              <Box sx={{ position: 'absolute', bottom: 24, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 1, zIndex: 10 }}>
                 {images.map((_, idx) => (
-                  <button
+                  <Box
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
-                    className={`h-2.5 rounded-full transition-all shadow-md ${idx === currentIndex ? 'bg-pink-400 w-8' : 'bg-zinc-400/80 hover:bg-white w-2.5'
-                      }`}
+                    sx={{
+                      height: 10,
+                      borderRadius: '50px',
+                      transition: 'all 0.3s',
+                      boxShadow: 2,
+                      cursor: 'pointer',
+                      width: idx === currentIndex ? 32 : 10,
+                      bgcolor: idx === currentIndex ? 'secondary.main' : 'rgba(255, 255, 255, 0.7)',
+                      '&:hover': { bgcolor: idx === currentIndex ? 'secondary.main' : '#ffffff' },
+                    }}
                   />
                 ))}
-              </div>
+              </Box>
             </>
           )}
-        </div>
+        </Box>
 
         {/* Thumbnails below */}
         {images.length > 1 && (
-          <div className="flex gap-4 mt-6 overflow-x-auto pb-4 scrollbar-hide">
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2,
+              mt: 3,
+              overflowX: 'auto',
+              pb: 2,
+              scrollbarWidth: 'none',
+              '&::-webkit-scrollbar': { display: 'none' },
+            }}
+          >
             {images.map((img, idx) => (
-              <button
+              <Box
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`relative w-28 h-28 flex-shrink-0 rounded-2xl overflow-hidden transition-all ${idx === currentIndex
-                    ? 'ring-4 ring-pink-300 ring-offset-2 opacity-100'
-                    : 'opacity-70 hover:opacity-100 border border-zinc-300'
-                  }`}
+                sx={{
+                  position: 'relative',
+                  width: 112,
+                  height: 112,
+                  flexShrink: 0,
+                  borderRadius: 2.5,
+                  overflow: 'hidden',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                  opacity: idx === currentIndex ? 1 : 0.65,
+                  outline: idx === currentIndex ? '3px solid' : 'none',
+                  outlineColor: 'primary.main',
+                  outlineOffset: 2,
+                  border: idx === currentIndex ? 'none' : '1px solid',
+                  borderColor: 'divider',
+                  '&:hover': { opacity: 1, transform: 'translateY(-2px)' },
+                }}
               >
                 <Image src={img} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
-              </button>
+              </Box>
             ))}
-          </div>
+          </Box>
         )}
 
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

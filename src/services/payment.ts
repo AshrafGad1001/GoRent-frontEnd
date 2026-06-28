@@ -1,27 +1,31 @@
+import { fetchApi } from "./auth";
+
+const validateObjectId = (id: string, label: string) => {
+    if (!id || typeof id !== "string") {
+        throw new Error(`${label} is required`);
+    }
+    if (!/^[a-f\d]{24}$/i.test(id)) {
+        throw new Error(`Invalid ${label}`);
+    }
+};
+
+export interface PaymentResponse {
+    paymentUrl: string;
+    orderId?: string;
+}
+
 export const paymentService = {
-    initiateBookingFeePayment: async (bookingId: string) => {
-        const res = await fetch(`/api/payments/booking-fee/${bookingId}`, {
+    initiateBookingFeePayment: async (bookingId: string): Promise<PaymentResponse> => {
+        validateObjectId(bookingId, "booking ID");
+        return fetchApi<PaymentResponse>(`/api/payment/booking-fee/${bookingId}`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
         });
-        if (!res.ok) {
-            const error = await res.json();
-            throw new Error(error.message || "فشل بدء عملية الدفع");
-        }
-        return res.json();
     },
 
-    initiateListingFeePayment: async (propertyId: string) => {
-        const res = await fetch(`/api/payments/listing-fee/${propertyId}`, {
+    initiateListingFeePayment: async (propertyId: string): Promise<PaymentResponse> => {
+        validateObjectId(propertyId, "property ID");
+        return fetchApi<PaymentResponse>(`/api/payment/listing-fee/${propertyId}`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
         });
-        if (!res.ok) {
-            const error = await res.json();
-            throw new Error(error.message || "فشل بدء عملية الدفع");
-        }
-        return res.json();
     },
 };

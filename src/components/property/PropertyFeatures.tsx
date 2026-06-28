@@ -7,10 +7,40 @@ import ElevatorIcon from '@mui/icons-material/ElevatorOutlined';
 import BoltIcon from '@mui/icons-material/BoltOutlined';
 import PeopleIcon from '@mui/icons-material/PeopleOutlined';
 import AssignmentIcon from '@mui/icons-material/AssignmentOutlined';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { Property } from '@/types/property';
 
 interface PropertyFeaturesProps {
   property: Property;
+}
+
+// استخراج كومبوننت صغير للستايل المتكرر
+function FeatureItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number }) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box
+        sx={{
+          bgcolor: 'background.default',
+          p: 1.5,
+          borderRadius: '50%',
+          color: 'text.secondary',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        {icon}
+      </Box>
+      <Box>
+        <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary', fontWeight: 500 }}>
+          {label}
+        </Typography>
+        <Typography sx={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'text.primary' }}>
+          {value}
+        </Typography>
+      </Box>
+    </Box>
+  );
 }
 
 export default function PropertyFeatures({ property }: PropertyFeaturesProps) {
@@ -20,98 +50,81 @@ export default function PropertyFeatures({ property }: PropertyFeaturesProps) {
   const hasElevator = property.specifications?.apartment?.hasElevator;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-wrap gap-8 items-center justify-between mb-10">
-      <div className="flex items-center gap-3">
-        <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-          <SquareFootIcon />
-        </div>
-        <div>
-          <p className="text-sm text-gray-500 font-medium">المساحة</p>
-          <p className="text-lg font-bold text-gray-900">{property.squareFootage} متر مربع</p>
-        </div>
-      </div>
+    <Box
+      sx={{
+        bgcolor: 'background.paper',
+        borderRadius: 2,
+        boxShadow: 1,
+        border: '1px solid',
+        borderColor: 'divider',
+        p: 3,
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 4,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        mb: 5,
+      }}
+    >
+      <FeatureItem
+        icon={<SquareFootIcon />}
+        label="المساحة"
+        value={`${property.squareFootage} متر مربع`}
+      />
 
       {isResidential ? (
         <>
-          <div className="flex items-center gap-3">
-            <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-              <BedIcon />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 font-medium">غرف النوم</p>
-              <p className="text-lg font-bold text-gray-900">{bedrooms || 0}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-              <BathtubIcon />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 font-medium">الحمامات</p>
-              <p className="text-lg font-bold text-gray-900">{bathrooms || 0}</p>
-            </div>
-          </div>
+          <FeatureItem
+            icon={<BedIcon />}
+            label="غرف النوم"
+            value={bedrooms || 0}
+          />
+          <FeatureItem
+            icon={<BathtubIcon />}
+            label="الحمامات"
+            value={bathrooms || 0}
+          />
           {hasElevator && (
-            <div className="flex items-center gap-3">
-              <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-                <ElevatorIcon />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 font-medium">مصعد</p>
-                <p className="text-lg font-bold text-gray-900">نعم</p>
-              </div>
-            </div>
+            <FeatureItem
+              icon={<ElevatorIcon />}
+              label="مصعد"
+              value="نعم"
+            />
           )}
         </>
       ) : (
         <>
-          <div className="flex items-center gap-3">
-            <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-              <StorefrontIcon />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 font-medium">نوع العقار</p>
-              <p className="text-lg font-bold text-gray-900">تجاري</p>
-            </div>
-          </div>
+          <FeatureItem
+            icon={<StorefrontIcon />}
+            label="نوع العقار"
+            value="تجاري"
+          />
 
           {property.specifications?.shop?.electricityCapacity !== null && property.specifications?.shop?.electricityCapacity !== undefined && (
-            <div className="flex items-center gap-3">
-              <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-                <BoltIcon />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 font-medium">قدرة الكهرباء</p>
-                <p className="text-lg font-bold text-gray-900">{property.specifications.shop.electricityCapacity} واط</p>
-              </div>
-            </div>
+            <FeatureItem
+              icon={<BoltIcon />}
+              label="قدرة الكهرباء"
+              value={`${property.specifications.shop.electricityCapacity} واط`}
+            />
           )}
 
           {property.specifications?.shop?.footTrafficTier && (
-            <div className="flex items-center gap-3">
-              <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-                <PeopleIcon />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 font-medium">مستوى حركة المرور</p>
-                <p className="text-lg font-bold text-gray-900">{property.specifications.shop.footTrafficTier}</p>
-              </div>
-            </div>
+            <FeatureItem
+              icon={<PeopleIcon />}
+              label="مستوى حركة المرور"
+              value={property.specifications.shop.footTrafficTier}
+            />
           )}
 
           {property.specifications?.shop?.commercialLicenseRequired !== null && property.specifications?.shop?.commercialLicenseRequired !== undefined && (
-            <div className="flex items-center gap-3">
-              <div className="bg-zinc-100 p-3 rounded-full text-zinc-700">
-                <AssignmentIcon />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 font-medium">رخصة تجارية مطلوبة</p>
-                <p className="text-lg font-bold text-gray-900">{property.specifications.shop.commercialLicenseRequired ? 'نعم' : 'لا'}</p>
-              </div>
-            </div>
+            <FeatureItem
+              icon={<AssignmentIcon />}
+              label="رخصة تجارية مطلوبة"
+              value={property.specifications.shop.commercialLicenseRequired ? 'نعم' : 'لا'}
+            />
           )}
         </>
       )}
-    </div>
+    </Box>
   );
 }

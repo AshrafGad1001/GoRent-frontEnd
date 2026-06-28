@@ -1,8 +1,12 @@
-"use client";
+'use client';
 
 import React from "react";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Container from "@mui/material/Container";
+import { alpha } from "@mui/material/styles";
 import Link from "next/link";
 
 // Icons for Values
@@ -36,12 +40,12 @@ export default function AboutPage() {
   ];
 
   const features = [
-    { title: "عقارات موثقة", description: "يتم التحقق من كافة العقارات لضمان صحة المعلومات.", icon: <VerifiedUserIcon fontSize="large" className="text-zinc-600" /> },
-    { title: "بحث سهل", description: "أدوات بحث متقدمة للوصول إلى العقار المناسب بسرعة.", icon: <SearchIcon fontSize="large" className="text-zinc-600" /> },
-    { title: "معلومات واضحة", description: "تفاصيل شاملة عن كل عقار مع صور عالية الجودة.", icon: <InfoIcon fontSize="large" className="text-zinc-600" /> },
-    { title: "دعم متواصل", description: "فريق خدمة عملاء متاح لمساعدتك في أي وقت.", icon: <SupportAgentIcon fontSize="large" className="text-zinc-600" /> },
-    { title: "تواصل آمن", description: "نظام مراسلة داخلي يحمي خصوصيتك وبياناتك.", icon: <LockIcon fontSize="large" className="text-zinc-600" /> },
-    { title: "تجربة مستخدم سلسة", description: "واجهة استخدام سهلة تناسب جميع الأجهزة.", icon: <ThumbUpIcon fontSize="large" className="text-zinc-600" /> },
+    { title: "عقارات موثقة", description: "يتم التحقق من كافة العقارات لضمان صحة المعلومات.", icon: <VerifiedUserIcon fontSize="large" sx={{ color: "text.secondary" }} /> },
+    { title: "بحث سهل", description: "أدوات بحث متقدمة للوصول إلى العقار المناسب بسرعة.", icon: <SearchIcon fontSize="large" sx={{ color: "text.secondary" }} /> },
+    { title: "معلومات واضحة", description: "تفاصيل شاملة عن كل عقار مع صور عالية الجودة.", icon: <InfoIcon fontSize="large" sx={{ color: "text.secondary" }} /> },
+    { title: "دعم متواصل", description: "فريق خدمة عملاء متاح لمساعدتك في أي وقت.", icon: <SupportAgentIcon fontSize="large" sx={{ color: "text.secondary" }} /> },
+    { title: "تواصل آمن", description: "نظام مراسلة داخلي يحمي خصوصيتك وبياناتك.", icon: <LockIcon fontSize="large" sx={{ color: "text.secondary" }} /> },
+    { title: "تجربة مستخدم سلسة", description: "واجهة استخدام سهلة تناسب جميع الأجهزة.", icon: <ThumbUpIcon fontSize="large" sx={{ color: "text.secondary" }} /> },
   ];
 
   const steps = [
@@ -52,169 +56,176 @@ export default function AboutPage() {
   ];
 
   const stats = [
-    { number: "+500", label: "عقار متاح", icon: <HomeWorkIcon fontSize="large" className="text-blue-600 mb-2" /> },
-    { number: "+120", label: "مالك عقار", icon: <PersonIcon fontSize="large" className="text-blue-600 mb-2" /> },
-    { number: "+1,500", label: "مستخدم مسجل", icon: <GroupsIcon fontSize="large" className="text-blue-600 mb-2" /> },
-    { number: "%95", label: "نسبة رضا العملاء", icon: <StarRateIcon fontSize="large" className="text-blue-600 mb-2" /> },
+    { number: "+500", label: "عقار متاح", icon: <HomeWorkIcon fontSize="large" sx={{ color: "info.main", mb: 2 }} /> },
+    { number: "+120", label: "مالك عقار", icon: <PersonIcon fontSize="large" sx={{ color: "info.main", mb: 2 }} /> },
+    { number: "+1,500", label: "مستخدم مسجل", icon: <GroupsIcon fontSize="large" sx={{ color: "info.main", mb: 2 }} /> },
+    { number: "%95", label: "نسبة رضا العملاء", icon: <StarRateIcon fontSize="large" sx={{ color: "info.main", mb: 2 }} /> },
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-50 font-sans pb-10">
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default', pb: 5 }}>
+
       {/* 1. Hero Section */}
-      <section className="bg-white border-b border-gray-200 pt-20 pb-24 px-4 text-center">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-6 leading-tight">
-            مرحباً بك في <span className="text-blue-600">GoRent</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+      <Box component="section" sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider', pt: 10, pb: 12, px: 2, textAlign: 'center' }}>
+        <Container maxWidth="md">
+          <Typography variant="h3" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 3, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
+            مرحباً بك في <Typography component="span" variant="h1" sx={{ color: 'primary.main' }}>GoRent</Typography>
+          </Typography>
+          <Typography variant="h6" sx={{ color: 'text.secondary', mb: 5, maxWidth: 600, mx: 'auto', lineHeight: 1.8 }}>
             المنصة الرائدة لتأجير العقارات في مصر. نحن هنا لنجعل تجربة البحث عن عقار أو تأجيره أسهل، أسرع، وأكثر أماناً.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {/* @ts-ignore */}
-            <Button variant="contained" color="primary" component={Link} href="/" size="large">
-              ابحث عن عقار
-            </Button>
-            {/* @ts-ignore */}
-            <Button variant="outlined" color="primary" component={Link} href="/contact" size="large">
-              تواصل معنا
-            </Button>
-          </div>
-        </div>
-      </section>
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, justifyContent: 'center' }}>
+            <Box component={Link} href="/" sx={{ textDecoration: 'none' }}>
+              <Button variant="contained" size="large" fullWidth sx={{ maxWidth: { sm: 'auto' } }}>
+                ابحث عن عقار
+              </Button>
+            </Box>
+            <Box component={Link} href="/contact" sx={{ textDecoration: 'none' }}>
+              <Button variant="outlined" size="large" fullWidth sx={{ maxWidth: { sm: 'auto' } }}>
+                تواصل معنا
+              </Button>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
 
       {/* 2. About GoRent */}
-      <section className="py-20 px-4 max-w-7xl mx-auto w-full">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-zinc-900 mb-6">من نحن ولماذا GoRent؟</h2>
-              <p className="text-gray-600 mb-4 leading-relaxed text-lg">
-                GoRent هي منصة عقارية متخصصة تهدف إلى تغيير وتسهيل طريقة استئجار العقارات في المنطقة.
-              </p>
-              <p className="text-gray-600 mb-4 leading-relaxed text-lg">
-                تم إنشاء المنصة لحل مشكلة صعوبة العثور على سكن موثوق به والتعامل مع وسطاء عقاريين قد يزيدون من تعقيد العملية. نحن نقضي على الخطوات غير الضرورية ونوفر معلومات شفافة وموثوقة للجميع.
-              </p>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                نحن نساعد كل من المستأجرين وملاك العقارات من خلال ربطهم مباشرة في بيئة آمنة تضمن حقوق الطرفين وتوفر تجربة خالية من المتاعب.
-              </p>
-            </div>
-            <div className="bg-blue-50 rounded-xl p-8 flex flex-col justify-center h-full">
-              {/* 3. Our Mission */}
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold text-blue-900 mb-3 flex items-center gap-2">
-                  <StarRateIcon /> مهمتنا
-                </h3>
-                <p className="text-blue-800 leading-relaxed">
-                  تمكين الأفراد والعائلات من العثور على منزل أحلامهم بسهولة وشفافية، مع تزويد ملاك العقارات بأدوات متطورة وفعالة لإدارة ممتلكاتهم بأمان.
-                </p>
-              </div>
-              {/* 4. Our Vision */}
-              <div>
-                <h3 className="text-2xl font-bold text-blue-900 mb-3 flex items-center gap-2">
-                  <VisibilityIcon /> رؤيتنا
-                </h3>
-                <p className="text-blue-800 leading-relaxed">
-                  أن نصبح المنصة الأولى والأكثر ثقة لإيجار العقارات، حيث يمكن لأي شخص إيجاد مسكن يلبي كافة احتياجاته بنقرة زر واحدة وفي بيئة موثوقة.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Box component="section" sx={{ py: 10, px: 2 }}>
+        <Container maxWidth="lg">
+          <Card sx={{ bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1, border: '1px solid', borderColor: 'divider', p: { xs: 4, md: 6 } }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 3, alignItems: 'center' }}>
+              <Box>
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 3 }}>من نحن ولماذا GoRent؟</Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 2, lineHeight: 1.8, fontSize: '1.1rem' }}>
+                  GoRent هي منصة عقارية متخصصة تهدف إلى تغيير وتسهيل طريقة استئجار العقارات في المنطقة.
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 2, lineHeight: 1.8, fontSize: '1.1rem' }}>
+                  تم إنشاء المنصة لحل مشكلة صعوبة العثور على سكن موثوق به والتعامل مع وسطاء عقاريين قد يزيدون من تعقيد العملية. نحن نقضي على الخطوات غير الضرورية ونوفر معلومات شفافة وموثوقة للجميع.
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
+                  نحن نساعد كل من المستأجرين وملاك العقارات من خلال ربطهم مباشرة في بيئة آمنة تضمن حقوق الطرفين وتوفر تجربة خالية من المتاعب.
+                </Typography>
+              </Box>
+              <Box sx={(theme) => ({ bgcolor: alpha(theme.palette.info.main, 0.05), borderRadius: 2, p: 4, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' })}>
+                <Box sx={{ mb: 4 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'info.dark', mb: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <StarRateIcon /> مهمتنا
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: 'info.main', lineHeight: 1.8 }}>
+                    تمكين الأفراد والعائلات من العثور على منزل أحلامهم بسهولة وشفافية، مع تزويد ملاك العقارات بأدوات متطورة وفعالة لإدارة ممتلكاتهم بأمان.
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'info.dark', mb: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <VisibilityIcon /> رؤيتنا
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: 'info.main', lineHeight: 1.8 }}>
+                    أن نصبح المنصة الأولى والأكثر ثقة لإيجار العقارات، حيث يمكن لأي شخص إيجاد مسكن يلبي كافة احتياجاته بنقرة زر واحدة وفي بيئة موثوقة.
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          </Card>
+        </Container>
+      </Box>
 
       {/* 5. Our Core Values */}
-      <section className="py-20 bg-white px-4 border-y border-gray-100">
-        <div className="max-w-7xl mx-auto w-full">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-zinc-900 mb-4">قيمنا الأساسية</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">المبادئ التي نلتزم بها لضمان تقديم أفضل خدمة لعملائنا</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <Box component="section" sx={{ py: 10, bgcolor: 'background.paper', borderTop: '1px solid', borderBottom: '1px solid', borderColor: 'divider', px: 2 }}>
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
+            <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 2 }}>قيمنا الأساسية</Typography>
+            <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: 600, mx: 'auto' }}>المبادئ التي نلتزم بها لضمان تقديم أفضل خدمة لعملائنا</Typography>
+          </Box>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
             {values.map((item, index) => (
-              <Card key={index} className="p-8 text-center h-full flex flex-col items-center hover:shadow-md transition-shadow">
-                <div className="bg-blue-50 p-4 rounded-full mb-6 inline-flex">
+              <Card key={index} sx={{ p: 4, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: 1, border: '1px solid', borderColor: 'divider', transition: 'box-shadow 0.3s', '&:hover': { boxShadow: 4 } }}>
+                <Box sx={(theme) => ({ bgcolor: alpha(theme.palette.info.main, 0.08), p: 2, borderRadius: '50%', display: 'inline-flex', mb: 3 })}>
                   {item.icon}
-                </div>
-                <h3 className="text-xl font-bold text-zinc-900 mb-3">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                </Box>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 1 }}>{item.title}</Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>{item.description}</Typography>
               </Card>
             ))}
-          </div>
-        </div>
-      </section>
+          </Box>
+        </Container>
+      </Box>
 
       {/* 6. Why Choose GoRent & 7. How It Works */}
-      <section className="py-20 px-4 max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Why Choose Us */}
-          <div>
-            <h2 className="text-3xl font-bold text-zinc-900 mb-10">لماذا تختار GoRent؟</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {features.map((feature, index) => (
-                <div key={index} className="flex gap-4">
-                  <div className="mt-1 flex-shrink-0">{feature.icon}</div>
-                  <div>
-                    <h4 className="text-lg font-bold text-zinc-900 mb-2">{feature.title}</h4>
-                    <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+      <Box component="section" sx={{ py: 10, px: 2 }}>
+        <Container maxWidth="lg">
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 4 }}>
+            {/* Why Choose Us */}
+            <Box>
+              <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 4 }}>لماذا تختار GoRent؟</Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 1.5 }}>
+                {features.map((feature, index) => (
+                  <Box key={index} sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{ mt: 0.5, flexShrink: 0 }}>{feature.icon}</Box>
+                    <Box>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 0.5 }}>{feature.title}</Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>{feature.description}</Typography>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
 
-          {/* How It Works */}
-          <div>
-            <h2 className="text-3xl font-bold text-zinc-900 mb-10">كيف تعمل المنصة؟</h2>
-            <div className="space-y-8 relative">
-              <div className="absolute top-0 bottom-0 right-6 w-0.5 bg-blue-100 hidden sm:block"></div>
-              {steps.map((step, index) => (
-                <div key={index} className="flex gap-6 items-start relative bg-white p-4 rounded-xl border border-gray-50 shadow-sm z-10">
-                  <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xl flex-shrink-0 shadow-sm">
-                    {step.step}
-                  </div>
-                  <div className="pt-2">
-                    <h4 className="text-xl font-bold text-zinc-900 mb-2">{step.title}</h4>
-                    <p className="text-gray-600 leading-relaxed">{step.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+            {/* How It Works */}
+            <Box>
+              <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 4 }}>كيف تعمل المنصة؟</Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, position: 'relative' }}>
+                {/* Vertical Line for Timeline */}
+                <Box sx={{ position: 'absolute', top: 24, bottom: 24, right: 24, width: '2px', bgcolor: (theme) => alpha(theme.palette.info.main, 0.2), display: { xs: 'none', sm: 'block' } }} />
+
+                {steps.map((step, index) => (
+                  <Box key={index} sx={{ display: 'flex', gap: 3, alignItems: 'flex-start', position: 'relative', zIndex: 1 }}>
+                    <Box sx={{ width: 48, height: 48, borderRadius: '50%', bgcolor: 'info.main', color: 'info.contrastText', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.25rem', flexShrink: 0, boxShadow: 2 }}>
+                      {step.step}
+                    </Box>
+                    <Card sx={{ p: 2, flex: 1, bgcolor: 'background.paper', boxShadow: 1, border: '1px solid', borderColor: 'divider' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 0.5 }}>{step.title}</Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>{step.description}</Typography>
+                    </Card>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
 
       {/* 8. Statistics Section */}
-      <section className="py-20 bg-zinc-900 text-white px-4 rounded-3xl max-w-7xl mx-auto w-full mb-20 shadow-xl overflow-hidden">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
-          {stats.map((stat, index) => (
-            <div key={index} className="flex flex-col items-center">
-              {stat.icon}
-              <div className="text-3xl md:text-4xl font-bold mb-2">{stat.number}</div>
-              <div className="text-gray-400 font-medium">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <Box component="section" sx={(theme) => ({ py: 10, bgcolor: theme.palette.mode === 'light' ? '#18181b' : theme.palette.grey[900], color: '#fff', px: 2, borderRadius: 3, maxWidth: 'lg', mx: 'auto', width: '100%', mb: 5, boxShadow: 6, overflow: 'hidden' })}>
+        <Container>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: '1fr 1fr 1fr 1fr' }, gap: 2, textAlign: 'center' }}>
+            {stats.map((stat, index) => (
+              <Box key={index} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {stat.icon}
+                <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>{stat.number}</Typography>
+                <Typography variant="body1" sx={{ color: 'grey.400', fontWeight: 500 }}>{stat.label}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Container>
+      </Box>
 
       {/* 9. Final Call To Action */}
-      <section className="py-24 px-4 text-center bg-blue-50 border-t border-blue-100 mt-auto">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-6">هل أنت مستعد للبدء؟</h2>
-          <p className="text-xl text-blue-800 mb-10 leading-relaxed">
+      <Box component="section" sx={(theme) => ({ py: 10, px: 2, textAlign: 'center', bgcolor: alpha(theme.palette.info.main, 0.05), borderTop: '1px solid', borderColor: alpha(theme.palette.info.main, 0.2), mt: 'auto' })}>
+        <Container maxWidth="md">
+          <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'info.dark', mb: 3, fontSize: { xs: '2rem', md: '2.5rem' } }}>هل أنت مستعد للبدء؟</Typography>
+          <Typography variant="h6" sx={{ color: 'info.main', mb: 5, lineHeight: 1.8 }}>
             انضم إلى آلاف المستخدمين الذين وجدوا عقارهم المثالي عبر منصتنا اليوم.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {/* @ts-ignore */}
-            <Button variant="contained" color="primary" component={Link} href="/" size="large" sx={{ px: 6, py: 1.5 }}>
-              تصفح العقارات المتاحة
-            </Button>
-            {/* @ts-ignore */}
-            <Button variant="outlined" color="primary" component={Link} href="/contact" size="large" sx={{ px: 6, py: 1.5, bgcolor: 'white' }}>
-              تواصل مع فريقنا
-            </Button>
-          </div>
-        </div>
-      </section>
-    </div>
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, justifyContent: 'center' }}>
+            <Box component={Link} href="/" sx={{ textDecoration: 'none' }}>
+              <Button variant="contained" size="large" sx={{ px: 4, py: 1.5 }}>تصفح العقارات المتاحة</Button>
+            </Box>
+            <Box component={Link} href="/contact" sx={{ textDecoration: 'none' }}>
+              <Button variant="outlined" size="large" sx={{ px: 4, py: 1.5, bgcolor: 'background.paper' }}>تواصل مع فريقنا</Button>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+    </Box>
   );
 }

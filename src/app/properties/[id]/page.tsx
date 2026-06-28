@@ -5,12 +5,29 @@ import { useParams, useRouter } from 'next/navigation';
 import { propertyServicenorhan } from '@/services/property';
 import { Property } from '@/types/property';
 import dynamic from 'next/dynamic';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Skeleton from '@mui/material/Skeleton';
+import Paper from '@mui/material/Paper';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import PropertyHero from '@/components/property/PropertyHero';
 import PropertyFeatures from '@/components/property/PropertyFeatures';
 import PropertyContact from '@/components/property/PropertyContact';
 import PropertyReviews from '@/components/property/PropertyReviews';
 
 const PropertyMap = dynamic(() => import("@/components/home/PropertyMap"), { ssr: false });
+
+// Shared entrance animation for content sections — keeps every block
+// consistent without repeating the same sx object everywhere.
+const fadeInUp = {
+  '@keyframes fadeInUp': {
+    from: { opacity: 0, transform: 'translateY(16px)' },
+    to: { opacity: 1, transform: 'translateY(0)' },
+  },
+  animation: 'fadeInUp 0.5s ease-out both',
+};
 
 export default function PropertyDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -35,80 +52,176 @@ export default function PropertyDetailsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-zinc-50">
-        <div className="w-12 h-12 border-4 border-zinc-300 border-t-zinc-800 rounded-full animate-spin"></div>
-      </div>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: 10 }}>
+        <Skeleton variant="rectangular" sx={{ width: '100%', height: { xs: 320, md: 480 } }} />
+        <Box sx={{ maxWidth: 1200, mx: 'auto', px: { xs: 2, md: 3 }, mt: 6 }}>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 6 }}>
+            <Box sx={{ width: '100%', flex: { lg: 2 } }}>
+              <Skeleton variant="rounded" height={80} sx={{ mb: 4, borderRadius: 3 }} />
+              <Skeleton variant="text" width="40%" height={40} sx={{ mb: 1 }} />
+              <Skeleton variant="text" width="100%" />
+              <Skeleton variant="text" width="95%" />
+              <Skeleton variant="text" width="80%" sx={{ mb: 4 }} />
+              <Skeleton variant="rounded" height={400} sx={{ borderRadius: 3 }} />
+            </Box>
+            <Box sx={{ width: '100%', flex: { lg: 1 } }}>
+              <Skeleton variant="rounded" height={320} sx={{ borderRadius: 3 }} />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     );
   }
 
   if (!property) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50">
-        <h2 className="text-2xl font-bold text-gray-800">العقار غير موجود</h2>
-        <button
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          bgcolor: 'background.default',
+          gap: 3,
+        }}
+      >
+        <Box
+          sx={{
+            width: 100,
+            height: 100,
+            borderRadius: '50%',
+            bgcolor: (theme) => theme.palette.mode === 'light' ? 'rgba(220, 38, 38, 0.08)' : 'rgba(248, 113, 113, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '2px dashed',
+            borderColor: 'error.main',
+            mb: 2,
+          }}
+        >
+          <MapOutlinedIcon sx={{ fontSize: 40, color: 'error.main', opacity: 0.7 }} />
+        </Box>
+        <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+          العقار غير موجود
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<ArrowForwardIcon />}
           onClick={() => router.push('/')}
-          className="mt-4 px-6 py-2 bg-zinc-800 text-white rounded-md hover:bg-zinc-900"
+          sx={{ px: 4, py: 1.5, borderRadius: 1.5 }}
         >
           العودة للرئيسية
-        </button>
-      </div>
+        </Button>
+      </Box>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 pb-20">
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: 10 }}>
       {/* Header Image Section */}
       <PropertyHero property={property} />
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 mt-12">
-        <div className="flex flex-col lg:flex-row gap-12">
+      <Box sx={{ maxWidth: 1200, mx: 'auto', px: { xs: 2, md: 3 }, mt: { xs: 4, md: 6 } }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 6 }}>
 
-          {/* Right Column: Details (RTL so lg:w-2/3 is on the right) */}
-          <div className="w-full lg:w-2/3">
+          {/* Right Column: Details (RTL so flex: 2 is on the right) */}
+          <Box sx={{ width: '100%', flex: { lg: 2 }, ...fadeInUp }}>
 
             {/* Key Features Bar */}
             <PropertyFeatures property={property} />
 
             {/* Description */}
-            <div className="mb-10">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">حول هذا العقار</h2>
-              <div className="prose prose-zinc max-w-none">
-                <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                  {property.description}
-                </p>
-              </div>
-            </div>
+            <Box sx={{ mb: 6 }}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 2 }}>
+                حول هذا العقار
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'text.secondary',
+                  lineHeight: 1.9,
+                  whiteSpace: 'pre-line',
+                  fontSize: '1.02rem',
+                }}
+              >
+                {property.description}
+              </Typography>
+            </Box>
 
             {/* Map */}
-            <div className="mb-10">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">الموقع</h2>
+            <Box sx={{ mb: 6 }}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 2 }}>
+                الموقع
+              </Typography>
               {property.location?.coordinates?.length >= 2 ? (
-                <div className="h-[400px] w-full rounded-2xl overflow-hidden shadow-sm border border-gray-200">
+                <Paper
+                  elevation={0}
+                  sx={{
+                    height: 400,
+                    width: '100%',
+                    borderRadius: 4,
+                    overflow: 'hidden',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    boxShadow: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? '0 8px 24px rgba(15, 23, 42, 0.08)'
+                        : '0 8px 24px rgba(0, 0, 0, 0.4)',
+                  }}
+                >
                   <PropertyMap
                     properties={[property]}
                     searchCenter={{ lat: property.location.coordinates[1], lng: property.location.coordinates[0] }}
                   />
-                </div>
+                </Paper>
               ) : (
-                <div className="bg-gray-100 p-6 rounded-xl text-center text-gray-500">موقع الخريطة غير متوفر.</div>
+                <Box
+                  sx={{
+                    bgcolor: 'background.paper',
+                    p: 4,
+                    borderRadius: 4,
+                    textAlign: 'center',
+                    color: 'text.secondary',
+                    border: '1px dashed',
+                    borderColor: 'divider',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 1,
+                  }}
+                >
+                  <MapOutlinedIcon sx={{ fontSize: 40, opacity: 0.4 }} />
+                  <Typography>موقع الخريطة غير متوفر.</Typography>
+                </Box>
               )}
-            </div>
+            </Box>
 
             {/* Reviews */}
-            <div>
+            <Box>
               <PropertyReviews propertyId={property._id} />
-            </div>
+            </Box>
 
-          </div>
+          </Box>
 
-          {/* Left Column: Sidebar Contact */}
-          <div className="w-full lg:w-1/3">
+          {/* Left Column: Sidebar Contact — sticky so it stays in view while scrolling */}
+          <Box
+            sx={{
+              width: '100%',
+              flex: { lg: 1 },
+              ...fadeInUp,
+              animationDelay: '0.1s',
+              alignSelf: 'flex-start',
+              position: { lg: 'sticky' },
+              top: { lg: 96 },
+            }}
+          >
             <PropertyContact property={property} />
-          </div>
+          </Box>
 
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }

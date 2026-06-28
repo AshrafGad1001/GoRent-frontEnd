@@ -1,4 +1,10 @@
+"use client";
+
 import React from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface BookingModalHeaderProps {
   onClose: () => void;
@@ -6,18 +12,35 @@ interface BookingModalHeaderProps {
 
 export default function BookingModalHeader({ onClose }: BookingModalHeaderProps) {
   return (
-    <div className="bg-zinc-900 px-6 py-5 flex items-center justify-between">
-      <div>
-        <h2 className="text-white font-bold text-xl"> تأكيد الحجز</h2>
-        <p className="text-zinc-400 text-sm mt-0.5">حدد مدة الإيجار المطلوبة</p>
-      </div>
-      <button
+    <Box
+      sx={{
+        bgcolor: "primary.dark",
+        px: 3,
+        py: 2.5,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <Box>
+        <Typography sx={{ color: "primary.contrastText", fontWeight: "bold", fontSize: "1.25rem" }}>
+          تأكيد الحجز
+        </Typography>
+        <Typography variant="body2" sx={{ color: "primary.contrastText", opacity: 0.7, mt: 0.5 }}>
+          حدد مدة الإيجار المطلوبة
+        </Typography>
+      </Box>
+      <IconButton
         onClick={onClose}
-        className="text-zinc-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-zinc-700"
         aria-label="إغلاق"
+        sx={{
+          color: "primary.contrastText",
+          opacity: 0.7,
+          "&:hover": { bgcolor: "rgba(255, 255, 255, 0.1)", opacity: 1 },
+        }}
       >
-        ✕
-      </button>
-    </div>
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Box>
   );
 }

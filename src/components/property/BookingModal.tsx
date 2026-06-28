@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Box from "@mui/material/Box";
 import { bookingService } from "@/services/booking";
 import { BookingModalProps, CreateBookingResponse } from "@/types/booking";
 import BookingModalHeader from "../Booking/BookingModalHeader";
@@ -73,19 +74,50 @@ export default function BookingModal({ propertyId, pricePerMonth, onClose }: Boo
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}
+    <Box
       onClick={onClose}
+      sx={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 2,
+        backgroundColor: "rgba(0,0,0,0.7)",
+        backdropFilter: "blur(8px)",
+        "@keyframes fadeIn": {
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+        },
+        animation: "fadeIn 0.2s ease-out",
+      }}
     >
-      <div
-        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
-        dir="rtl"
+      <Box
         onClick={(e) => e.stopPropagation()}
+        dir="rtl"
+        sx={{
+          position: "relative",
+          width: "100%",
+          maxWidth: 560,
+          maxHeight: "92vh",
+          overflowY: "auto",
+          bgcolor: "background.paper",
+          borderRadius: 4,
+          boxShadow: (theme) =>
+            theme.palette.mode === "light"
+              ? "0 25px 60px rgba(15, 23, 42, 0.35)"
+              : "0 25px 60px rgba(0, 0, 0, 0.7)",
+          "@keyframes scaleIn": {
+            from: { opacity: 0, transform: "scale(0.95) translateY(8px)" },
+            to: { opacity: 1, transform: "scale(1) translateY(0)" },
+          },
+          animation: "scaleIn 0.25s ease-out",
+        }}
       >
         <BookingModalHeader onClose={onClose} />
 
-        <div className="p-6">
+        <Box sx={{ p: 3 }}>
           {success ? (
             <BookingSuccessStep
               booking={success.booking}
@@ -108,8 +140,8 @@ export default function BookingModal({ propertyId, pricePerMonth, onClose }: Boo
               onCancel={onClose}
             />
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }

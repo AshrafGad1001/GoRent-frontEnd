@@ -1,6 +1,9 @@
 "use client";
 
 import React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { alpha } from '@mui/material/styles';
 import FilterBar from './FilterBar';
 import { PropertyFilters } from "@/types/property";
 
@@ -12,23 +15,46 @@ interface HeroSectionProps {
 
 export default function HeroSection({ filters, onFilterChange, onSearch }: HeroSectionProps) {
   return (
-    <div
+    <Box
       className="relative w-full min-h-[600px] flex flex-col items-center justify-center bg-cover bg-center py-16"
-      style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop")' }}
+      sx={{ backgroundImage: 'url("/hero-section.jpg")' }}
     >
-      <div className="absolute inset-0 bg-black/50"></div>
+      {/* Multi-stop gradient overlay for a professional, deep look */}
+      <Box
+        sx={(theme) => ({
+          position: 'absolute',
+          inset: 0,
+          background: `
+            linear-gradient(
+              to bottom,
+              ${alpha('#000000', 0.5)} 0%,
+              ${alpha(theme.palette.primary.main, 0.6)} 45%,
+              ${alpha(theme.palette.primary.dark, 0.9)} 100%
+            )
+          `,
+        })}
+      />
 
-      <div className="relative z-10 flex flex-col items-center w-full max-w-6xl px-4 text-center mt-12 gap-10">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-md">
-          تصفح المنازل، الشقق <br className="hidden md:block" /> والعقارات بكل سهولة
-        </h1>
+      <Box className="relative z-10 flex flex-col items-center w-full max-w-6xl px-4 text-center mt-12 gap-10">
+        <Typography
+          variant="h3"
+          sx={{
+            fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
+            fontWeight: 800,
+            color: '#FFFFFF', 
+            lineHeight: 1.2,
+            textShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          }}
+        >
+          تصفح العقارات بكل سهولة
+        </Typography>
 
-        <FilterBar 
-          filters={filters} 
-          onFilterChange={onFilterChange} 
-          onSearch={onSearch} 
+        <FilterBar
+          filters={filters}
+          onFilterChange={onFilterChange}
+          onSearch={onSearch}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

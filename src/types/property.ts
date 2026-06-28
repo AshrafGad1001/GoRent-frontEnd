@@ -21,7 +21,7 @@ export interface PropertySpecifications {
 
 export interface Property {
   _id: string;
-  ownerId: string | { _id: string; name: string; email: string; };
+  ownerId: string | { _id: string; name: string; email: string };
   type: PropertyType;
   title: string;
   description: string;
