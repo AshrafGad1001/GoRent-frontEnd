@@ -13,15 +13,15 @@ import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
+// import DarkModeIcon from "@mui/icons-material/DarkMode";
+// import LightModeIcon from "@mui/icons-material/LightMode";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "../../hooks/useAuth";
 import NotificationMenu from "./NotificationMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { useColorMode } from "../../lib/ColorModeContext";
+// import { useColorMode } from "../../lib/ColorModeContext";
 
 const pages = [
   { name: "عن الشركة", path: "/about" },
@@ -45,20 +45,20 @@ function getDashboardPath(role?: string): string {
   }
 }
 
-function ThemeToggle() {
-  const { mode, toggleColorMode } = useColorMode();
-  return (
-    <Tooltip title={mode === "light" ? "تفعيل الوضع الليلي" : "تفعيل الوضع النهاري"}>
-      <IconButton
-        onClick={toggleColorMode}
-        color="inherit"
-        aria-label="toggle color mode"
-      >
-        {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-      </IconButton>
-    </Tooltip>
-  );
-}
+// function ThemeToggle() {
+//   const { mode, toggleColorMode } = useColorMode();
+//   return (
+//     <Tooltip title={mode === "light" ? "تفعيل الوضع الليلي" : "تفعيل الوضع النهاري"}>
+//       <IconButton
+//         onClick={toggleColorMode}
+//         color="inherit"
+//         aria-label="toggle color mode"
+//       >
+//         {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+//       </IconButton>
+//     </Tooltip>
+//   );
+// }
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth();
@@ -154,7 +154,7 @@ export default function Navbar() {
 
           {/* Right side: theme toggle + auth section */}
           <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center", gap: 1 }}>
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
 
             {isAuthenticated && user ? (
               <>

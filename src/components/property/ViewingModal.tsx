@@ -1,6 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 import { viewingService } from "@/services/viewing";
 import { ViewingResponse } from "@/types/viewing";
 
@@ -60,98 +68,154 @@ export default function ViewingModal({ propertyId, onClose }: ViewingModalProps)
   const today = new Date().toISOString().slice(0, 16);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}
+    <Box
       onClick={onClose}
+      sx={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 2,
+        backgroundColor: "rgba(0,0,0,0.7)",
+        backdropFilter: "blur(8px)",
+        "@keyframes fadeIn": {
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+        },
+        animation: "fadeIn 0.2s ease-out",
+      }}
     >
-      <div
-        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
-        dir="rtl"
+      <Box
         onClick={(e) => e.stopPropagation()}
+        dir="rtl"
+        sx={{
+          position: "relative",
+          width: "100%",
+          maxWidth: 480,
+          maxHeight: "92vh",
+          overflowY: "auto",
+          bgcolor: "background.paper",
+          borderRadius: 4,
+          boxShadow: (theme) =>
+            theme.palette.mode === "light"
+              ? "0 25px 60px rgba(15, 23, 42, 0.35)"
+              : "0 25px 60px rgba(0, 0, 0, 0.7)",
+          "@keyframes scaleIn": {
+            from: { opacity: 0, transform: "scale(0.95) translateY(8px)" },
+            to: { opacity: 1, transform: "scale(1) translateY(0)" },
+          },
+          animation: "scaleIn 0.25s ease-out",
+        }}
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50/50">
-          <h2 className="text-xl font-bold text-gray-900">طلب معاينة</h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            ✕
-          </button>
-        </div>
+        {/* Header */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            p: 2.5,
+            borderBottom: "1px solid",
+            borderColor: "divider",
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            طلب معاينة
+          </Typography>
+          <IconButton onClick={onClose} size="small">
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Box>
 
-        <div className="p-6">
+        <Box sx={{ p: 3 }}>
           {success ? (
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-2xl">
-                ✓
-              </div>
-              <h3 className="text-xl font-bold text-gray-900">{success.message}</h3>
-              <p className="text-gray-600">
+            <Box sx={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 2 }}>
+              <Box
+                sx={{
+                  width: 64,
+                  height: 64,
+                  bgcolor: "success.main",
+                  color: "success.contrastText",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mx: "auto",
+                }}
+              >
+                <CheckIcon fontSize="large" />
+              </Box>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                {success.message}
+              </Typography>
+              <Typography color="text.secondary">
                 موعد المعاينة: {new Date(success.viewing.scheduledAt).toLocaleString("ar-SA")}
-              </p>
-              <button
+              </Typography>
+              <Button
                 onClick={onClose}
-                className="w-full bg-zinc-800 hover:bg-zinc-900 text-white font-bold py-3 px-4 rounded-xl transition-colors mt-6"
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{ mt: 2, py: 1.3, borderRadius: 3, fontWeight: 700 }}
               >
                 إغلاق
-              </button>
-            </div>
+              </Button>
+            </Box>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
-                  {error}
-                </div>
-              )}
+            <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+              {error && <Alert severity="error">{error}</Alert>}
 
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
-                  تاريخ ووقت المعاينة
-                </label>
-                <input
-                  type="datetime-local"
-                  required
-                  min={today}
-                  value={scheduledAt}
-                  onChange={(e) => setScheduledAt(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                />
-              </div>
+              <TextField
+                label="تاريخ ووقت المعاينة"
+                type="datetime-local"
+                required
+                fullWidth
+                value={scheduledAt}
+                onChange={(e) => setScheduledAt(e.target.value)}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  input: { inputProps: { min: today } },
+                }}
+              />
 
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
-                  ملاحظات (اختياري)
-                </label>
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="مثال: أود التحقق من حالة الشقة..."
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none h-24 resize-none"
-                />
-              </div>
+              <TextField
+                label="ملاحظات (اختياري)"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="مثال: أود التحقق من حالة الشقة..."
+                fullWidth
+                multiline
+                rows={3}
+              />
 
-              <div className="flex gap-3 pt-4">
-                <button
+              <Box sx={{ display: "flex", gap: 1.5, pt: 1 }}>
+                <Button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-zinc-800 hover:bg-zinc-900 text-white font-bold py-3 px-4 rounded-xl transition-colors disabled:opacity-50"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  sx={{ py: 1.3, borderRadius: 3, fontWeight: 700 }}
                 >
                   {loading ? "جاري الإرسال..." : "تأكيد الطلب"}
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
                   onClick={onClose}
                   disabled={loading}
-                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3 px-4 rounded-xl transition-colors disabled:opacity-50"
+                  variant="outlined"
+                  color="inherit"
+                  fullWidth
+                  sx={{ py: 1.3, borderRadius: 3, fontWeight: 700 }}
                 >
                   إلغاء
-                </button>
-              </div>
-            </form>
+                </Button>
+              </Box>
+            </Box>
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }
