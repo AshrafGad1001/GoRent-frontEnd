@@ -100,7 +100,7 @@ function getComponents(mode: PaletteMode): ThemeOptions['components'] {
       },
     },
 
-    
+
     MuiDivider: {
       styleOverrides: {
         root: ({ theme }) => ({
@@ -155,7 +155,7 @@ function getComponents(mode: PaletteMode): ThemeOptions['components'] {
       },
     },
 
-    
+
     MuiIconButton: {
       styleOverrides: {
         root: ({ theme }) => ({

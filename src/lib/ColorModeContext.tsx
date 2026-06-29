@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
 import { PaletteMode } from '@mui/material';
 
 type ColorModeContextType = {
@@ -17,32 +17,40 @@ const ColorModeContext = createContext<ColorModeContextType>({
 
 const STORAGE_KEY = 'gorent-color-mode';
 
+function getInitialMode(): PaletteMode {
+
+    if (typeof window === 'undefined') return 'light';
+
+    const saved = window.localStorage.getItem(STORAGE_KEY) as PaletteMode | null;
+    if (saved === 'light' || saved === 'dark') return saved;
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
 export function ColorModeProvider({ children }: { children: React.ReactNode }) {
-    // Always start with 'light' — matches the server render, avoiding hydration mismatches.
-    // We sync to the real preference (localStorage / prefers-color-scheme) after mount.
+
     const [mode, setModeState] = useState<PaletteMode>('light');
 
-    useEffect(() => {
-        const saved = window.localStorage.getItem(STORAGE_KEY) as PaletteMode | null;
-        if (saved === 'light' || saved === 'dark') {
-            setModeState(saved);
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setModeState('dark');
-        }
-    }, []);
 
-    const setMode = (newMode: PaletteMode) => {
+    const setMode = useCallback((newMode: PaletteMode) => {
         setModeState(newMode);
         window.localStorage.setItem(STORAGE_KEY, newMode);
-    };
+    }, []);
 
-    const toggleColorMode = () => {
+    const toggleColorMode = useCallback(() => {
         setMode(mode === 'light' ? 'dark' : 'light');
-    };
+    }, [mode, setMode]);
 
-    const value = useMemo(() => ({ mode, toggleColorMode, setMode }), [mode]);
+    const value = useMemo(
+        () => ({ mode, toggleColorMode, setMode }),
+        [mode, toggleColorMode, setMode]
+    );
 
-    return <ColorModeContext.Provider value={value}>{children}</ColorModeContext.Provider>;
+    return (
+        <ColorModeContext.Provider value={value}>
+            {children}
+        </ColorModeContext.Provider>
+    );
 }
 
 export function useColorMode() {
