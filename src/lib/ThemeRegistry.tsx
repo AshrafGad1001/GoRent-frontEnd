@@ -3,37 +3,37 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import stylisRTLPlugin from 'stylis-plugin-rtl';
 import { prefixer } from 'stylis';
 import { getTheme } from '../theme';
 import { ColorModeProvider, useColorMode } from './ColorModeContext';
 
-// RTL cache for Emotion — must be created once
-const cacheRtl = createCache({
+// RTL options passed to AppRouterCacheProvider — it handles useServerInsertedHTML internally
+const rtlCacheOptions = {
   key: 'muirtl',
-  stylisPlugins: [prefixer, stylisRTLPlugin],
-});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  stylisPlugins: [prefixer, stylisRTLPlugin] as any[],
+};
 
 function InnerThemeProvider({ children }: { children: React.ReactNode }) {
   const { mode } = useColorMode();
   const theme = React.useMemo(() => getTheme(mode), [mode]);
 
   return (
-    <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </CacheProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {children}
+    </ThemeProvider>
   );
 }
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
   return (
-    <ColorModeProvider>
-      <InnerThemeProvider>{children}</InnerThemeProvider>
-    </ColorModeProvider>
+    <AppRouterCacheProvider options={rtlCacheOptions}>
+      <ColorModeProvider>
+        <InnerThemeProvider>{children}</InnerThemeProvider>
+      </ColorModeProvider>
+    </AppRouterCacheProvider>
   );
 }
