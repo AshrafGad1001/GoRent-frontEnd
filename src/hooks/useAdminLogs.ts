@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { adminService } from '../services/admin';
-import { AdminLog, AdminUser } from '../types/admin';
+import { adminService } from '@/services/admin';
+import { AdminLog, AdminUser } from '@/types/admin';
 
 export function useAdminLogs() {
   const [logs, setLogs] = useState<AdminLog[]>([]);
@@ -16,13 +16,11 @@ export function useAdminLogs() {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        // Fetch logs and admins in parallel
         const [logsRes, adminsRes] = await Promise.all([
           adminService.getLogs({ page, limit: pageSize }),
           adminService.getAdmins()
         ]);
-        
-        // Create a lookup map: { adminId: adminName }
+
         const map: Record<string, string> = {};
         adminsRes.admins.forEach((admin: AdminUser) => {
           map[admin._id] = admin.name;
@@ -32,8 +30,8 @@ export function useAdminLogs() {
         setLogs(logsRes.logs);
         setTotalPages(logsRes.pagination.totalPages);
         setError(null);
-      } catch (err: any) {
-        setError(err.message || 'حدث خطأ أثناء جلب السجلات');
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'حدث خطأ أثناء جلب السجلات');
       } finally {
         setIsLoading(false);
       }
