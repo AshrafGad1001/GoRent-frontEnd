@@ -195,14 +195,30 @@ export default function AboutPage() {
       </Box>
 
       {/* 8. Statistics Section */}
-      <Box component="section" sx={(theme) => ({ py: 10, bgcolor: theme.palette.mode === 'light' ? '#18181b' : theme.palette.grey[900], color: '#fff', px: 2, borderRadius: 3, maxWidth: 'lg', mx: 'auto', width: '100%', mb: 5, boxShadow: 6, overflow: 'hidden' })}>
+      <Box component="section" sx={(theme) => ({
+        py: 10,
+        bgcolor: theme.palette.mode === 'light'
+          ? alpha(theme.palette.text.primary, 0.95)
+          : theme.palette.background.default,
+        color: theme.palette.mode === 'light'
+          ? theme.palette.background.paper
+          : theme.palette.text.primary,
+        px: 2,
+        borderRadius: theme.shape.borderRadius,
+        maxWidth: 'lg',
+        mx: 'auto',
+        width: '100%',
+        mb: 5,
+        boxShadow: 6,
+        overflow: 'hidden'
+      })}>
         <Container>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: '1fr 1fr 1fr 1fr' }, gap: 2, textAlign: 'center' }}>
             {stats.map((stat, index) => (
               <Box key={index} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {stat.icon}
                 <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>{stat.number}</Typography>
-                <Typography variant="body1" sx={{ color: 'grey.400', fontWeight: 500 }}>{stat.label}</Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', fontWeight: 500 }}>{stat.label}</Typography>
               </Box>
             ))}
           </Box>

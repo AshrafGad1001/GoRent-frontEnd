@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import NextLink from 'next/link';
 import Image from "next/image";
-import { Home, Copyright as CopyrightIcon } from '@mui/icons-material';
+import { Copyright as CopyrightIcon } from '@mui/icons-material';
 
 // Small reusable footer link — avoids repeating the Link + Typography + hover
 // pattern for every single item below.
@@ -65,7 +65,6 @@ export default function Footer() {
 
           <Grid size={{ xs: 12, md: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-              <Home color="primary" />
               <Image
                 src="/GoRent-logo.png"
                 alt="GoRent Logo"
