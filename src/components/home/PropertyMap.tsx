@@ -219,6 +219,7 @@ export default function PropertyMap({ properties, searchCenter, searchRadius, on
                         src={property.images[0]}
                         alt={property.title}
                         fill
+                        sizes="192px"
                         className="object-cover"
                       />
                     </div>

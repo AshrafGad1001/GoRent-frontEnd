@@ -92,6 +92,7 @@ export default function ChatThreadList({
                     src={propertyImage}
                     alt={thread.propertyId?.title || "عقار"}
                     fill
+                    sizes="20px"
                     className="object-cover"
                     unoptimized={
                       propertyImage.startsWith("data:") ||

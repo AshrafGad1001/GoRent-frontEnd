@@ -1,81 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useServerInsertedHTML } from 'next/navigation';
+import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import stylisRTLPlugin from 'stylis-plugin-rtl';
 import { prefixer } from 'stylis';
-import rtlPlugin from 'stylis-plugin-rtl';
 import { getTheme } from '../theme';
 import { ColorModeProvider, useColorMode } from './ColorModeContext';
 
+// RTL options passed to AppRouterCacheProvider — it handles useServerInsertedHTML internally
+const rtlCacheOptions = {
+  key: 'muirtl',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  stylisPlugins: [prefixer, stylisRTLPlugin] as any[],
+};
+
 function InnerThemeProvider({ children }: { children: React.ReactNode }) {
-  const theme = React.useMemo(() => getTheme("light"), []);
-
-
-  const [{ cache, flush }] = useState(() => {
-    const cache = createCache({
-      key: 'muirtl',
-      stylisPlugins: [prefixer, rtlPlugin],
-      prepend: true,
-    });
-    cache.compat = true;
-
-    const prevInsert = cache.insert;
-    let inserted: string[] = [];
-
-    cache.insert = (...args) => {
-      const serialized = args[1];
-      if (cache.inserted[serialized.name] === undefined) {
-        inserted.push(serialized.name);
-      }
-      return prevInsert(...args);
-    };
-
-    const flush = () => {
-      const prevInserted = inserted;
-      inserted = [];
-      return prevInserted;
-    };
-
-    return { cache, flush };
-  });
-
-
-  useServerInsertedHTML(() => {
-    const names = flush();
-    if (names.length === 0) return null;
-
-    let styles = '';
-    for (const name of names) {
-      styles += cache.inserted[name];
-    }
-
-    return (
-      <style
-        key={cache.key}
-        data-emotion={`${cache.key} ${names.join(' ')}`}
-        dangerouslySetInnerHTML={{ __html: styles }}
-      />
-    );
-  });
+  const { mode } = useColorMode();
+  const theme = React.useMemo(() => getTheme(mode), [mode]);
 
   return (
-    <CacheProvider value={cache}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </CacheProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {children}
+    </ThemeProvider>
   );
 }
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
   return (
-    <ColorModeProvider>
-      <InnerThemeProvider>{children}</InnerThemeProvider>
-    </ColorModeProvider>
+    <AppRouterCacheProvider options={rtlCacheOptions}>
+      <ColorModeProvider>
+        <InnerThemeProvider>{children}</InnerThemeProvider>
+      </ColorModeProvider>
+    </AppRouterCacheProvider>
   );
 }

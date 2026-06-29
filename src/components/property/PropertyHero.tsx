@@ -183,6 +183,7 @@ export default function PropertyHero({ property }: PropertyHeroProps) {
             src={images[currentIndex]}
             alt={`${property.title} - Image ${currentIndex + 1}`}
             fill
+            sizes="(max-width: 768px) 100vw, 80vw"
             className="object-cover transition-opacity duration-300"
             priority
           />
@@ -336,7 +337,7 @@ export default function PropertyHero({ property }: PropertyHeroProps) {
                   '&:hover': { opacity: 1, transform: 'translateY(-2px)' },
                 }}
               >
-                <Image src={img} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
+                <Image src={img} alt={`Thumbnail ${idx + 1}`} fill sizes="120px" className="object-cover" />
               </Box>
             ))}
           </Box>

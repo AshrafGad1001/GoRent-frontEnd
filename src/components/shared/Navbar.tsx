@@ -103,7 +103,7 @@ export default function Navbar() {
               alt="GoRent"
               height={32}
               width={96}
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "contain", width: "auto" }}
             />
           </Box>
 
@@ -184,7 +184,7 @@ export default function Navbar() {
               alt="GoRent"
               height={28}
               width={84}
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "contain", width: "auto" }}
             />
           </Box>
 

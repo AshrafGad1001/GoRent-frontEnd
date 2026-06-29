@@ -63,6 +63,7 @@ export default function ImageUploader({
                 src={url}
                 alt={`صورة ${index + 1}`}
                 fill
+                sizes="(max-width: 768px) 50vw, 33vw"
                 className="object-cover"
                 unoptimized={url.startsWith("http://localhost")}
               />
@@ -85,6 +86,7 @@ export default function ImageUploader({
                 src={URL.createObjectURL(file)}
                 alt={`صورة جديدة ${index + 1}`}
                 fill
+                sizes="(max-width: 768px) 50vw, 33vw"
                 className="object-cover"
                 unoptimized
               />

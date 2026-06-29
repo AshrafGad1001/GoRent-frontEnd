@@ -32,6 +32,7 @@ export default function ChatAvatar({
           src={avatar}
           alt={name || "مستخدم"}
           fill
+          sizes="48px"
           className="object-cover"
           unoptimized={avatar.includes("cloudinary.com")}
         />
