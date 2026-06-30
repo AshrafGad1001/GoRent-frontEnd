@@ -126,7 +126,7 @@ export default function Navbar() {
             </IconButton>
             
             <Drawer
-              anchor="right"
+              anchor="left"
               open={drawerOpen}
               onClose={toggleDrawer(false)}
               sx={{ '& .MuiDrawer-paper': { width: 280, borderRadius: "16px 0 0 16px" } }}
