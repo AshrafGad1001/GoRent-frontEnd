@@ -47,9 +47,6 @@ function getDashboardPath(role?: string): string {
 function getMessagesPath(isAuthenticated: boolean, role?: string): string {
   if (!isAuthenticated) return "/auth/login";
   switch (role) {
-    case "admin":
-    case "superadmin":
-      return "/dashboard/admin/messages";
     case "owner":
       return "/dashboard/owner/messages";
     case "tenant":
