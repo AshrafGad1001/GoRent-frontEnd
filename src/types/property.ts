@@ -34,6 +34,7 @@ export interface Property {
   viewingCount?: number;
   location: PropertyLocation;
   isAvailable: boolean;
+  listingPaid: boolean;
   status: PropertyStatus;
   specifications?: PropertySpecifications;
   createdAt: string;
