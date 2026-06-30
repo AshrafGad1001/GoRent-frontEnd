@@ -79,7 +79,7 @@ export default function Navbar() {
     { name: "تواصل معنا", path: "/contact", icon: <EmailOutlinedIcon fontSize="small" /> },
     { name: "الرسائل", path: getMessagesPath(isAuthenticated, user?.role), icon: <MessageOutlinedIcon fontSize="small" /> },
   ].filter(page => {
-    
+
     if (page.name === "الرئيسية" || page.name === "عن الشركة" || page.name === "تواصل معنا") return true;
 
     const isAdminOrSuperAdmin = user?.role === "admin" || user?.role === "superadmin";
