@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { Eye, MessageSquare, Pencil, Trash2 } from "lucide-react";
+import { Eye, MessageSquare, Pencil, Trash2, CreditCard } from "lucide-react";
 import { Property } from "../../../types/property";
+import { paymentService } from "../../../services/payment";
+import CircularProgress from "@mui/material/CircularProgress";
 import {
   formatCurrency,
   formatPropertyLocation,
@@ -37,7 +40,22 @@ export default function PropertyListItem({
   onDelete,
   isDeleting,
 }: PropertyListItemProps) {
+  const [payLoading, setPayLoading] = useState(false);
   const imageSrc = property.images?.[0] || PLACEHOLDER_IMAGE;
+
+  const handlePayment = async () => {
+    try {
+      setPayLoading(true);
+      const data = await paymentService.initiateListingFeePayment(property._id);
+      if (data.paymentUrl) {
+        window.location.href = data.paymentUrl;
+      }
+    } catch (err) {
+      console.error("Payment initiation failed:", err);
+      alert(err instanceof Error ? err.message : "فشل بدء الدفع");
+      setPayLoading(false);
+    }
+  };
   const views = property.views ?? 0;
   const inquiries = property.viewingCount ?? 0;
 
@@ -68,6 +86,15 @@ export default function PropertyListItem({
           >
             {STATUS_LABELS[property.status]}
           </span>
+          {property.listingPaid ? (
+            <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700">
+              مدفوع
+            </span>
+          ) : (
+            <span className="rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-medium text-red-700">
+              غير مدفوع
+            </span>
+          )}
           <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-500">
             {formatRelativeTime(property.updatedAt)}
           </span>
@@ -91,6 +118,21 @@ export default function PropertyListItem({
         <p className="text-lg font-bold text-blue-600">
           {formatCurrency(property.pricePerMonth)}
         </p>
+        {!property.listingPaid && (
+          <button
+            type="button"
+            onClick={handlePayment}
+            disabled={payLoading}
+            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+          >
+            {payLoading ? (
+              <CircularProgress size={16} color="inherit" />
+            ) : (
+              <CreditCard className="h-4 w-4" />
+            )}
+            دفع الرسوم
+          </button>
+        )}
         <div className="flex items-center gap-1">
           {onEdit && (
             <button
