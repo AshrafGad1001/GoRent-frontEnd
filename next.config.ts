@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend-go-rent.vercel.app";
+
 const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
@@ -22,11 +24,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "https://backend-go-rent.vercel.app/api/:path*",
+        destination: `${apiUrl}/api/:path*`,
       },
       {
         source: "/socket.io/:path*",
-        destination: "https://backend-go-rent.vercel.app/socket.io/:path*",
+        destination: `${apiUrl}/socket.io/:path*`,
       },
     ];
   },
@@ -34,3 +36,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
