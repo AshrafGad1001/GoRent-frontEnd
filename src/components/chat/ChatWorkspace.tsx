@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Box, Typography, Alert, Paper, Divider } from "@mui/material";
+import { Box, Typography, Alert, Paper, useMediaQuery, useTheme } from "@mui/material";
 import { useChatThreads } from "../../hooks/useChatThreads";
 import { useChatMessages } from "../../hooks/useChatMessages";
 import { useChatSocket } from "../../context/ChatSocketContext";
@@ -29,6 +29,8 @@ export default function ChatWorkspace({
   emptyThreadListHint,
   emptyPanelHint,
 }: ChatWorkspaceProps) {
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
   const { isConnected, error: socketError } = useChatSocket();
   const [activeThreadId, setActiveThreadId] = useState<string | null>(
     initialThreadId,
@@ -71,6 +73,14 @@ export default function ChatWorkspace({
     clearUnread(threadId);
   };
 
+  const handleBack = () => {
+    setActiveThreadId(null);
+  };
+
+  // On mobile: show chat panel if a thread is active, otherwise show thread list
+  const showThreadList = isDesktop || !activeThreadId;
+  const showChatPanel = isDesktop || !!activeThreadId;
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       <Box>
@@ -106,66 +116,72 @@ export default function ChatWorkspace({
             overflow: "hidden",
           }}
         >
-          {/* Thread List Section */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              flexShrink: 0,
-              width: { xs: "100%", lg: 320 },
-              height: { xs: "50%", lg: "100%" },
-              borderBottom: { xs: 1, lg: 0 },
-              borderLeft: { xs: 0, lg: 1 },
-              borderColor: "divider",
-              overflow: "hidden",
-            }}
-          >
-            <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider", flexShrink: 0 }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600 }} color="text.primary">
-                {threadListLabel}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {threads.length} محادثة
-              </Typography>
+          {/* Thread List Section — hidden on mobile when a chat is open */}
+          {showThreadList && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                flexShrink: 0,
+                width: { xs: "100%", lg: 320 },
+                height: { xs: "100%", lg: "100%" },
+                borderBottom: { xs: 0, lg: 0 },
+                borderLeft: { xs: 0, lg: 1 },
+                borderColor: "divider",
+                overflow: "hidden",
+              }}
+            >
+              <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider", flexShrink: 0 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600 }} color="text.primary">
+                  {threadListLabel}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {threads.length} محادثة
+                </Typography>
+              </Box>
+              <ChatThreadList
+                threads={threads}
+                activeThreadId={activeThreadId}
+                currentUserId={currentUserId}
+                isLoading={threadsLoading}
+                onSelect={handleSelectThread}
+                emptyMessage={emptyThreadListMessage}
+                emptyHint={emptyThreadListHint}
+              />
             </Box>
-            <ChatThreadList
-              threads={threads}
-              activeThreadId={activeThreadId}
-              currentUserId={currentUserId}
-              isLoading={threadsLoading}
-              onSelect={handleSelectThread}
-              emptyMessage={emptyThreadListMessage}
-              emptyHint={emptyThreadListHint}
-            />
-          </Box>
+          )}
 
-          {/* Chat Panel Section */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-              minWidth: 0,
-              minHeight: 0,
-              overflow: "hidden",
-            }}
-          >
-            <ChatPanel
-              thread={activeThread}
-              currentUserId={currentUserId}
-              messages={messages}
-              isLoading={messagesLoading}
-              isSending={isSending}
-              error={messagesError}
-              isConnected={isConnected}
-              typingUserId={typingUserId}
-              onSend={sendMessage}
-              onTyping={notifyTyping}
-              emptyPanelHint={emptyPanelHint}
-            />
-          </Box>
+          {/* Chat Panel Section — takes full height on mobile */}
+          {showChatPanel && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+                minWidth: 0,
+                minHeight: 0,
+                height: { xs: "100%", lg: "auto" },
+                overflow: "hidden",
+              }}
+            >
+              <ChatPanel
+                thread={activeThread}
+                currentUserId={currentUserId}
+                messages={messages}
+                isLoading={messagesLoading}
+                isSending={isSending}
+                error={messagesError}
+                isConnected={isConnected}
+                typingUserId={typingUserId}
+                onSend={sendMessage}
+                onTyping={notifyTyping}
+                onBack={isDesktop ? undefined : handleBack}
+                emptyPanelHint={emptyPanelHint}
+              />
+            </Box>
+          )}
         </Box>
       </Paper>
     </Box>
   );
-}
+}

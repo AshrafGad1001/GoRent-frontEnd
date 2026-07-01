@@ -21,10 +21,13 @@ export default function ChatMessageList({
   typingUserId,
   typingUserName,
 }: ChatMessageListProps) {
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = containerRef.current;
+    if (el) {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    }
   }, [messages, typingUserId]);
 
   if (isLoading) {
@@ -44,7 +47,7 @@ export default function ChatMessageList({
   }
 
   return (
-    <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, overflowY: "auto", px: 2, py: 2 }}>
+    <Box ref={containerRef} sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, overflowY: "auto", px: 2, py: 2 }}>
       {messages.map((message) => {
         const senderId = getMessageSenderId(message.senderId);
         const isOwn = senderId === currentUserId;
@@ -66,7 +69,6 @@ export default function ChatMessageList({
         </Box>
       )}
 
-      <div ref={bottomRef} />
     </Box>
   );
 }
