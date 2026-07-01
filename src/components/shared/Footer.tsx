@@ -67,10 +67,11 @@ export default function Footer() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
               <Image
                 src="/GoRent-logo.png"
+                priority={true}
                 alt="GoRent Logo"
                 width={140}
                 height={40}
-                priority
+                style={{ objectFit: "contain", width: "auto",height:"auto" }}
               />
             </Box>
             <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.8 }}>
