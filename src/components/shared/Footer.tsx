@@ -9,7 +9,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import NextLink from 'next/link';
-import { Home, Copyright as CopyrightIcon } from '@mui/icons-material';
+import Image from "next/image";
+import { Copyright as CopyrightIcon } from '@mui/icons-material';
 
 // Small reusable footer link — avoids repeating the Link + Typography + hover
 // pattern for every single item below.
@@ -64,10 +65,14 @@ export default function Footer() {
 
           <Grid size={{ xs: 12, md: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-              <Home color="primary" />
-              <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main' }}>
-                goRent
-              </Typography>
+              <Image
+                src="/GoRent-logo.png"
+                priority={true}
+                alt="GoRent Logo"
+                width={140}
+                height={40}
+                style={{ objectFit: "contain", width: "auto",height:"auto" }}
+              />
             </Box>
             <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.8 }}>
               المنصة الذكية الرائدة لتأجير العقارات في المنطقة. توفر تجربة موثوقة وسهلة للمستأجرين والملاك
@@ -92,7 +97,6 @@ export default function Footer() {
               الدعم الفني
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <FooterLink href="/help">مركز المساعدة</FooterLink>
               <FooterLink href="/contact">اتصل بنا</FooterLink>
               <FooterLink href="/terms">شروط الاستخدام</FooterLink>
             </Box>

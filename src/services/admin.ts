@@ -5,6 +5,7 @@ import {
   AdminDispute,
   PlatformReport,
   Pagination,
+  AdminLog,
 } from "@/types/admin";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -141,11 +142,13 @@ export const adminService = {
     page?: number;
     limit?: number;
     role?: AdminUser["role"];
+    search?: string;
   } = {}): Promise<{ users: AdminUser[]; pagination: Pagination }> => {
     const query = new URLSearchParams();
     if (params.page) query.set("page", String(params.page));
     if (params.limit) query.set("limit", String(params.limit));
     if (params.role) query.set("role", params.role);
+    if (params.search) query.set("search", params.search);
     const qs = query.toString();
 
     const data = await fetchApi<{ users: RawUser[]; pagination: Pagination }>(
@@ -182,10 +185,14 @@ export const adminService = {
   getProperties: async (params: {
     page?: number;
     limit?: number;
+    status?: AdminProperty["status"] | "all";
+    search?: string;
   } = {}): Promise<{ properties: AdminProperty[]; pagination: Pagination }> => {
     const query = new URLSearchParams();
     if (params.page) query.set("page", String(params.page));
     if (params.limit) query.set("limit", String(params.limit));
+    if (params.status && params.status !== "all") query.set("status", params.status);
+    if (params.search) query.set("search", params.search);
     const qs = query.toString();
     const data = await fetchApi<{ properties: RawProperty[]; pagination: Pagination }>(
         `/api/properties/admin/properties${qs ? `?${qs}` : ""}`
@@ -207,10 +214,14 @@ export const adminService = {
   getReviews: async (params: {
     page?: number;
     limit?: number;
+    targetType?: "PROPERTY" | "OWNER" | "TENANT" | "all";
+    search?: string;
   } = {}): Promise<{ reviews: AdminReview[]; pagination: Pagination }> => {
     const query = new URLSearchParams();
     if (params.page) query.set("page", String(params.page));
     if (params.limit) query.set("limit", String(params.limit));
+    if (params.targetType && params.targetType !== "all") query.set("targetType", params.targetType);
+    if (params.search) query.set("search", params.search);
     const qs = query.toString();
     const data = await fetchApi<{ reviews: RawReview[]; pagination: Pagination }>(
         `/api/reviews${qs ? `?${qs}` : ""}`
@@ -225,10 +236,14 @@ export const adminService = {
   getDisputes: async (params: {
     page?: number;
     limit?: number;
+    status?: AdminDispute["status"] | "all";
+    search?: string;
   } = {}): Promise<{ disputes: AdminDispute[]; pagination: Pagination }> => {
     const query = new URLSearchParams();
     if (params.page) query.set("page", String(params.page));
     if (params.limit) query.set("limit", String(params.limit));
+    if (params.status && params.status !== "all") query.set("status", params.status);
+    if (params.search) query.set("search", params.search);
     const qs = query.toString();
     const data = await fetchApi<{ disputes: RawDispute[]; pagination: Pagination }>(
         `/api/disputes${qs ? `?${qs}` : ""}`
@@ -273,5 +288,20 @@ export const adminService = {
 
   demoteAdmin: async (id: string): Promise<void> => {
     await fetchApi(`/api/users/admins/${id}/demote`, { method: "PATCH" });
+  },
+
+  getLogs: async (params: {
+    page?: number;
+    limit?: number;
+  } = {}): Promise<{ logs: AdminLog[]; pagination: Pagination }> => {
+    const query = new URLSearchParams();
+    if (params.page) query.set("page", String(params.page));
+    if (params.limit) query.set("limit", String(params.limit));
+    const qs = query.toString();
+    
+    const data = await fetchApi<{ logs: AdminLog[]; pagination: Pagination }>(
+        `/api/logs${qs ? `?${qs}` : ""}`
+    );
+    return { logs: data.logs, pagination: data.pagination };
   },
 };

@@ -20,8 +20,9 @@ export default function ContactPage() {
       {/* Hero Banner */}
       <Box
         sx={{
-          background: "linear-gradient(135deg, #1565c0 0%, #1976d2 50%, #42a5f5 100%)",
-          color: "white",
+          background: (theme) =>
+            `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 50%, ${theme.palette.primary.light} 100%)`,
+          color: "primary.contrastText",
           py: { xs: 6, md: 8 },
           textAlign: "center",
         }}
@@ -49,7 +50,7 @@ export default function ContactPage() {
         <Paper
           elevation={3}
           sx={{
-            borderRadius: 3,
+            borderRadius: (theme) => theme.shape.borderRadius,
             overflow: "hidden",
           }}
         >

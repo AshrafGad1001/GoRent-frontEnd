@@ -25,6 +25,7 @@ import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import ReviewsIcon from "@mui/icons-material/Reviews";
 import GavelIcon from "@mui/icons-material/Gavel";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import Badge from "@mui/material/Badge";
@@ -110,6 +111,12 @@ export default function AdminDashboardLayout({
         label: "إدارة المشرفين",
         href: "/dashboard/admin/admins",
         icon: <SupervisedUserCircleIcon />,
+      });
+      menuItems.splice(usersIndex + 2, 0, {
+        id: "logs",
+        label: "سجلات النظام",
+        href: "/dashboard/admin/logs",
+        icon: <ReceiptLongIcon />,
       });
     }
   }
